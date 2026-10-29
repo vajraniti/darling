@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BLAKE3 · Свод</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+/* Layout: the page is a book of plates on stone-white paper, after Saville's Closer: framed engravings and photographs, one classical serif, the digest cut like an epitaph. One ground, no accent, no generated texture. */
+:root {
+  --stone: #e5e3de;
+  --ink: #121211;
+  --grey: #6b6862;
+  --hair: #bdb9b1;
+  --f: "EB Garamond", Garamond, "Times New Roman", serif;
+  --m: ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--stone);
+  color: var(--ink);
+  font-family: var(--f);
+  font-size: 19px;
+  line-height: 1.55;
+  font-variant-numeric: lining-nums;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+p { margin: 0; }
+a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset: 4px; }
+a:focus-visible, input:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
+.page { max-width: 1240px; margin: 0 auto; }
+
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; flex-wrap: wrap; padding-block: 26px 0; }
+.mark { font-size: 15px; letter-spacing: .34em; text-transform: uppercase; text-decoration: none; }
+.top nav { display: flex; gap: 26px; flex-wrap: wrap; }
+.top nav a { text-decoration: none; font-size: 17px; }
+.top nav a:hover { text-decoration: underline; }
+
+figure { margin: 0; }
+figure img { display: block; width: 100%; height: auto; }
+figcaption { font-size: 14px; color: var(--grey); font-style: italic; margin-top: 10px; }
+
+.hero { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px; align-items: end; padding-block: 40px 120px; }
+.hero figure img { max-height: 82vh; width: auto; max-width: 100%; }
+.side { display: flex; flex-direction: column; gap: 22px; padding-bottom: 28px; min-width: 0; }
+.lead { font-size: 21px; line-height: 1.45; max-width: 26em; }
+.field { display: flex; flex-direction: column; gap: 6px; margin-top: 18px; }
+.field label { font-size: 14px; color: var(--grey); font-style: italic; }
+.field input { font: italic 30px/1.2 var(--f); color: var(--ink); background: transparent; border: 0; border-bottom: 1px solid var(--ink); padding: 4px 0 8px; width: 100%; border-radius: 0; }
+.epitaph { font-size: clamp(19px, 2.15vw, 29px); line-height: 1.5; letter-spacing: .09em; text-align: center; font-variant-numeric: lining-nums tabular-nums; padding-block: 18px 6px; white-space: pre; }
+.meta { font-size: 14px; color: var(--grey); text-align: center; }
+
+.quote { padding-block: 0 140px; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 7fr) minmax(0, 3fr); }
+.quote blockquote { grid-column: 2; margin: 0; font-style: italic; font-size: clamp(28px, 3.6vw, 46px); line-height: 1.2; text-wrap: balance; }
+.quote p { grid-column: 2; margin-top: 18px; font-size: 15px; color: var(--grey); }
+
+section.part { border-top: 1px solid var(--ink); padding-block: 28px 140px; display: flex; flex-direction: column; gap: 40px; scroll-margin-top: 16px; }
+.part h2 { font-weight: 400; font-size: clamp(36px, 4.6vw, 60px); line-height: 1; margin: 0; letter-spacing: -.005em; }
+.cols { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: start; }
+.text { display: flex; flex-direction: column; gap: 16px; max-width: 32em; }
+.text .small { font-size: 15px; color: var(--grey); }
+#pechati .text { max-width: none; }
+
+.vault svg { width: 100%; height: auto; display: block; overflow: visible; }
+.vault .arch { fill: none; stroke: var(--ink); stroke-width: 1.1; }
+.vault .stone { fill: var(--ink); }
+.vault .node { fill: var(--stone); stroke: var(--ink); stroke-width: 1.1; }
+.vault .key { fill: var(--ink); }
+.vault text { font-family: var(--f); font-size: 15px; fill: var(--grey); }
+.vault .keytext { fill: var(--ink); font-size: 17px; }
+.vault .floor { stroke: var(--ink); stroke-width: 1; }
+.range { display: flex; flex-direction: column; gap: 8px; max-width: 32em; }
+.range label { font-size: 15px; color: var(--grey); font-style: italic; }
+.range input { width: 100%; accent-color: var(--ink); }
+.range output { font-size: 17px; }
+
+.tablets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 28px; margin-top: 14px; }
+.tablet { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.tablet h3 { font-weight: 400; font-size: 17px; margin: 0; border-bottom: 1px solid var(--hair); padding-bottom: 4px; }
+.tablet pre { margin: 0; font-family: var(--f); font-size: 12.5px; line-height: 1.55; letter-spacing: .02em; font-variant-numeric: lining-nums tabular-nums; white-space: pre; overflow-x: auto; }
+
+.bits { display: grid; grid-template-columns: repeat(16, 1fr); gap: 3px; max-width: 420px; }
+.bits i { aspect-ratio: 1; border: 1px solid var(--hair); }
+.bits i.f { background: var(--ink); border-color: var(--ink); }
+.count { font-size: clamp(40px, 5vw, 64px); line-height: 1; }
+
+.code { display: flex; flex-direction: column; gap: 26px; }
+.code pre { margin: 0; font-family: var(--m); font-size: 14px; line-height: 1.6; white-space: pre; overflow-x: auto; padding-top: 10px; border-top: 1px solid var(--hair); }
+.code p { font-size: 15px; color: var(--grey); }
+
+.colophon { border-top: 1px solid var(--ink); padding-block: 28px 80px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; font-size: 14px; color: var(--grey); }
+.colophon h2 { font-weight: 400; font-size: 17px; color: var(--ink); margin: 0 0 8px; }
+.colophon p + p { margin-top: 8px; }
+
+@media (max-width: 900px) {
+  .hero, .cols { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .hero { padding-block: 24px 80px; }
+  .quote { grid-template-columns: minmax(0, 1fr); padding-block: 0 90px; }
+  .quote blockquote, .quote p { grid-column: 1; }
+  .colophon { grid-template-columns: minmax(0, 1fr); }
+  section.part { padding-block: 24px 90px; }
+}
+@media (max-width: 460px) {
+  .tablet pre { font-size: 10.5px; }
+  .tablets { gap: 24px 14px; }
+}
+</style>
+
+</head>
+<body>
+<div class="page">
+<header class="top">
+  <a class="mark" href="#top">·BLAKE3·</a>
+  <nav aria-label="Разделы"><a href="#svod">свод</a><a href="#pechati">печати</a><a href="#lavina">лавина</a><a href="#kod">код</a></nav>
+</header>
+
+<main id="top">
+<div class="hero">
+  <figure><img src="img/fenton-salisbury-nave-1858.jpg" alt="Неф Солсберийского собора, фотография 1858 года" width="1600" height="1563"><figcaption>Роджер Фентон. Солсберийский собор, неф из южного трансепта. 1858. Альбуминовый отпечаток.</figcaption></figure>
+  <div class="side">
+    <p class="lead">Криптографическая хеш-функция. Внутри у неё дерево: куски по 1024 байта сходятся к одному корню, как нервюры к замковому камню.</p>
+    <div class="field">
+      <label for="inscr">Начертай что угодно — надпись пересчитается</label>
+      <input id="inscr" type="text" value="Gothic is Living Form" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="epitaph" id="digest" aria-live="polite"></div>
+    <p class="meta" id="meta"></p>
+  </div>
+</div>
+
+<div class="quote"><blockquote>Grecian is Mathematic Form<br>Gothic is Living Form</blockquote><p>Уильям Блейк, «On Virgil». Греческое — форма математическая, готическое — форма живая. BLAKE3 — его тёзка, и в ней есть и то и другое.</p></div>
+
+<section class="part" id="svod" aria-labelledby="h-svod">
+  <h2 id="h-svod">Свод</h2>
+  <div class="cols">
+    <div class="text">
+      <p>BLAKE3 режет вход на куски по 1024 байта. Каждый кусок сжимается сам по себе, поэтому их можно считать одновременно — на всех ядрах и всех полосах SIMD.</p>
+      <p>Пары кусков сходятся в узлы, пары узлов — в узлы выше, пока не останется один. Это дерево Меркла. Левые поддеревья в нём всегда полные, а узлов на один меньше, чем кусков.</p>
+      <p class="small">В готическом своде нервюры так же сходятся в одну точку — к замковому камню, который их запирает.</p>
+      <div class="range">
+        <label for="size">Размер входа, КиБ</label>
+        <input id="size" type="range" min="1" max="16" value="7">
+        <output id="sizeOut" for="size"></output>
+      </div>
+    </div>
+    <figure><img src="img/pesser-rib-vault-hall-1615.jpg" alt="Зал с колоннами и крестовыми нервюрными сводами, гравюра" width="1800" height="1082"><figcaption>Ганс Пессер. Зал с колоннами и крестовыми нервюрными сводами, вид «рыбьим глазом». Около 1610–1620. Гравюра.</figcaption></figure>
+  </div>
+  <div class="vault"><svg id="tree" viewBox="0 0 1000 470" role="img" aria-label="Дерево BLAKE3 для выбранного размера входа"></svg></div>
+</section>
+
+<section class="part" id="pechati" aria-labelledby="h-pechati">
+  <h2 id="h-pechati">Семь печатей</h2>
+  <div class="cols">
+    <figure><img src="img/durer-fifth-sixth-seals-1498.jpg" alt="Снятие пятой и шестой печатей, гравюра на дереве" width="1059" height="1500"><figcaption>Альбрехт Дюрер. Снятие пятой и шестой печатей, из «Апокалипсиса». 1498. Гравюра на дереве.</figcaption></figure>
+    <div class="text">
+      <p>Каждый блок по 64 байта проходит функцию сжатия. Её состояние — 16 слов по 32 бита, матрица 4×4. Сжатие длится семь раундов.</p>
+      <p>Раунд — восемь вызовов функции G: четыре по столбцам, четыре по диагоналям. Между раундами слова сообщения переставляются. После седьмого раунда половины матрицы складываются через XOR.</p>
+      <p class="small">Ниже последнее сжатие для твоей надписи — то, что даёт сам хеш: состояние до первого раунда и после каждого из семи.</p>
+      <div class="tablets" id="tablets"></div>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="lavina" aria-labelledby="h-lavina">
+  <h2 id="h-lavina">Лавина</h2>
+  <div class="cols">
+    <div class="text">
+      <p>Возьми свою надпись и поменяй в ней один бит — последний бит последнего байта. Из 256 бит хеша поменяется примерно половина, и заранее не скажешь, какие.</p>
+      <p class="count" id="count"></p>
+      <p class="small" id="lavinaMeta"></p>
+    </div>
+    <div class="bits" id="bits" role="img" aria-label="256 бит хеша, закрашены изменившиеся"></div>
+  </div>
+</section>
+
+<section class="part" id="kod" aria-labelledby="h-kod">
+  <h2 id="h-kod">Код</h2>
+  <div class="cols">
+    <div class="text">
+      <p>Из командной строки — утилита b3sum, из Rust — крейт blake3. Обе от авторов функции.</p>
+      <p class="small">Для паролей BLAKE3 не годится: она нарочно быстрая. Для паролей авторы советуют Argon2.</p>
+    </div>
+    <div class="code">
+      <pre>cargo install b3sum
+b3sum /tmp/bigfile</pre>
+      <pre>let hash = blake3::hash(b"foobarbaz");
+println!("{}", hash);</pre>
+      <pre>let key = [42u8; 32];
+let mac = blake3::keyed_hash(&amp;key, b"example input");</pre>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="colophon">
+  <div>
+    <h2>Функция</h2>
+    <p>BLAKE3 спроектировали Jack O'Connor, Samuel Neves, Jean-Philippe Aumasson и Zooko. Разработку спонсировала Electric Coin Company.</p>
+    <p>Основана на BLAKE2 и древовидном режиме Bao. Выход по умолчанию — 256 бит. Лицензия — CC0 или Apache 2.0.</p>
+  </div>
+  <div>
+    <h2>Эта страница</h2>
+    <p>Хеш считается в твоём браузере: порт эталонной реализации на JavaScript.</p>
+    <p>Проверен на официальных тест-векторах: 35 длин входа, три режима, 105 совпадений из 105.</p>
+  </div>
+  <div>
+    <h2>Изображения</h2>
+    <p>Роджер Фентон, «Солсберийский собор, неф», 1858.</p><p>Ганс Пессер, «Зал с нервюрными сводами», около 1610–1620.</p><p>Альбрехт Дюрер, «Снятие пятой и шестой печатей», 1498.</p><p>Все три — The Metropolitan Museum of Art, открытый доступ, CC0.</p>
+  </div>
+</footer>
+</div>
+
+<script>
+// BLAKE3 in plain JavaScript — a direct port of the official reference
+// implementation (reference_impl.rs, CC0). Small inputs only; no SIMD, no threads.
+// Checked against test_vectors.json from the BLAKE3 repository (all 35 lengths, 3 modes).
+(function (root) {
+  const IV = [0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A, 0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19];
+  const PERM = [2, 6, 3, 10, 7, 0, 4, 13, 1, 11, 12, 5, 9, 14, 15, 8];
+  const CHUNK_START = 1, CHUNK_END = 2, PARENT = 4, ROOT = 8, KEYED_HASH = 16, DERIVE_KEY_CONTEXT = 32, DERIVE_KEY_MATERIAL = 64;
+  const BLOCK_LEN = 64, CHUNK_LEN = 1024;
+
+  const rotr = (x, n) => ((x >>> n) | (x << (32 - n))) >>> 0;
+
+  function g(s, a, b, c, d, mx, my) {
+    s[a] = (s[a] + s[b] + mx) >>> 0; s[d] = rotr(s[d] ^ s[a], 16);
+    s[c] = (s[c] + s[d]) >>> 0;      s[b] = rotr(s[b] ^ s[c], 12);
+    s[a] = (s[a] + s[b] + my) >>> 0; s[d] = rotr(s[d] ^ s[a], 8);
+    s[c] = (s[c] + s[d]) >>> 0;      s[b] = rotr(s[b] ^ s[c], 7);
+  }
+
+  function round(s, m) {
+    g(s, 0, 4, 8, 12, m[0], m[1]);  g(s, 1, 5, 9, 13, m[2], m[3]);
+    g(s, 2, 6, 10, 14, m[4], m[5]); g(s, 3, 7, 11, 15, m[6], m[7]);
+    g(s, 0, 5, 10, 15, m[8], m[9]); g(s, 1, 6, 11, 12, m[10], m[11]);
+    g(s, 2, 7, 8, 13, m[12], m[13]); g(s, 3, 4, 9, 14, m[14], m[15]);
+  }
+
+  // trace, if given, receives the 16-word state before round 1 and after each of the 7 rounds.
+  function compress(cv, block, counter, blockLen, flags, trace) {
+    const s = [cv[0], cv[1], cv[2], cv[3], cv[4], cv[5], cv[6], cv[7],
+      IV[0], IV[1], IV[2], IV[3],
+      counter >>> 0, Math.floor(counter / 0x100000000) >>> 0, blockLen >>> 0, flags >>> 0];
+    let m = block.slice();
+    if (trace) trace.push(s.slice());
+    for (let r = 0; r < 7; r++) {
+      round(s, m);
+      if (trace) trace.push(s.slice());
+      if (r < 6) m = PERM.map(i => m[i]);
+    }
+    for (let i = 0; i < 8; i++) {
+      s[i] = (s[i] ^ s[i + 8]) >>> 0;
+      s[i + 8] = (s[i + 8] ^ cv[i]) >>> 0;
+    }
+    return s;
+  }
+
+  function wordsLE(bytes, n) {
+    const w = new Array(n).fill(0);
+    for (let i = 0; i < bytes.length; i++) w[i >> 2] |= bytes[i] << (8 * (i & 3));
+    return w.map(x => x >>> 0);
+  }
+
+  const cvOf = o => compress(o.cv, o.block, o.counter, o.blockLen, o.flags).slice(0, 8);
+
+  function chunkOutput(keyWords, chunk, counter, flags) {
+    const nBlocks = Math.max(1, Math.ceil(chunk.length / BLOCK_LEN));
+    let cv = keyWords;
+    for (let i = 0; i < nBlocks - 1; i++) {
+      const block = wordsLE(chunk.subarray(i * BLOCK_LEN, (i + 1) * BLOCK_LEN), 16);
+      cv = compress(cv, block, counter, BLOCK_LEN, flags | (i === 0 ? CHUNK_START : 0)).slice(0, 8);
+    }
+    const last = chunk.subarray((nBlocks - 1) * BLOCK_LEN);
+    return {
+      cv, block: wordsLE(last, 16), counter, blockLen: last.length,
+      flags: flags | (nBlocks === 1 ? CHUNK_START : 0) | CHUNK_END
+    };
+  }
+
+  function parentOutput(left, right, keyWords, flags) {
+    return { cv: keyWords, block: left.concat(right), counter: 0, blockLen: BLOCK_LEN, flags: flags | PARENT };
+  }
+
+  function rootBytes(o, outLen, trace) {
+    const out = new Uint8Array(outLen);
+    for (let b = 0, pos = 0; pos < outLen; b++) {
+      const words = compress(o.cv, o.block, b, o.blockLen, o.flags | ROOT, b === 0 ? trace : null);
+      for (let i = 0; i < 16 && pos < outLen; i++)
+        for (let k = 0; k < 4 && pos < outLen; k++) out[pos++] = (words[i] >>> (8 * k)) & 255;
+    }
+    return out;
+  }
+
+  // The tree is left-balanced: each completed pair of subtrees is merged at once (Section 5.1.2 of the spec).
+  function hashInternal(input, keyWords, flags, outLen, trace) {
+    const nChunks = Math.max(1, Math.ceil(input.length / CHUNK_LEN));
+    const stack = [];
+    for (let c = 0; c < nChunks - 1; c++) {
+      let cv = cvOf(chunkOutput(keyWords, input.subarray(c * CHUNK_LEN, (c + 1) * CHUNK_LEN), c, flags));
+      let total = c + 1;
+      while ((total & 1) === 0) { cv = cvOf(parentOutput(stack.pop(), cv, keyWords, flags)); total = total / 2; }
+      stack.push(cv);
+    }
+    let o = chunkOutput(keyWords, input.subarray((nChunks - 1) * CHUNK_LEN), nChunks - 1, flags);
+    for (let i = stack.length - 1; i >= 0; i--) o = parentOutput(stack[i], cvOf(o), keyWords, flags);
+    return rootBytes(o, outLen, trace);
+  }
+
+  const enc = s => (typeof s === 'string' ? new TextEncoder().encode(s) : s);
+  const hex = b => Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
+
+  const blake3 = {
+    hash: (input, outLen = 32, trace) => hashInternal(enc(input), IV, 0, outLen, trace),
+    keyedHash: (key, input, outLen = 32) => hashInternal(enc(input), wordsLE(enc(key), 8), KEYED_HASH, outLen),
+    deriveKey: (context, material, outLen = 32) => {
+      const ctxKey = hashInternal(enc(context), IV, DERIVE_KEY_CONTEXT, 32);
+      return hashInternal(enc(material), wordsLE(ctxKey, 8), DERIVE_KEY_MATERIAL, outLen);
+    },
+    hex,
+    CHUNK_LEN, BLOCK_LEN
+  };
+  if (typeof module !== 'undefined') module.exports = blake3; else root.blake3 = blake3;
+})(this);
+
+(function () {
+  const $ = id => document.getElementById(id);
+  const plural = (n, one, few, many) => {
+    const a = n % 10, b = n % 100;
+    if (a === 1 && b !== 11) return one;
+    if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return few;
+    return many;
+  };
+  const enc = new TextEncoder();
+  const HEX = b => blake3.hex(b).toUpperCase();
+  const word = x => x.toString(16).toUpperCase().padStart(8, '0');
+  const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+
+  function epitaph(hex) {
+    const g = hex.match(/.{8}/g);
+    return [0, 2, 4, 6].map(i => g[i] + ' · ' + g[i + 1]).join('\n');
+  }
+
+  function inscribe() {
+    const bytes = enc.encode($('inscr').value);
+    const trace = [];
+    const d = blake3.hash(bytes, 32, trace);
+    $('digest').textContent = epitaph(HEX(d));
+    const chunks = Math.max(1, Math.ceil(bytes.length / 1024));
+    $('meta').textContent = `${bytes.length} ${plural(bytes.length, 'байт', 'байта', 'байт')} · ${chunks} ${plural(chunks, 'кусок', 'куска', 'кусков')} · 256 бит`;
+
+    $('tablets').innerHTML = trace.map((s, k) =>
+      `<div class="tablet"><h3>${k === 0 ? 'До первого раунда' : 'Печать ' + ROMAN[k]}</h3><pre>${
+        [0, 4, 8, 12].map(r => s.slice(r, r + 4).map(word).join(' ')).join('\n')}</pre></div>`).join('');
+
+    if (bytes.length === 0) {
+      $('count').textContent = '—';
+      $('lavinaMeta').textContent = 'Начертай хоть что-нибудь, и будет с чем сравнить.';
+      $('bits').innerHTML = '';
+      return;
+    }
+    const flipped = bytes.slice();
+    const last = flipped.length - 1;
+    flipped[last] ^= 1;
+    const d2 = blake3.hash(flipped);
+    let n = 0, cells = '';
+    for (let i = 0; i < 256; i++) {
+      const f = ((d[i >> 3] ^ d2[i >> 3]) >> (7 - (i & 7))) & 1;
+      n += f;
+      cells += f ? '<i class="f"></i>' : '<i></i>';
+    }
+    $('bits').innerHTML = cells;
+    $('count').textContent = `${n} из 256`;
+    const hx = v => '0x' + v.toString(16).toUpperCase().padStart(2, '0');
+    $('lavinaMeta').textContent = `Последний байт ${hx(bytes[last])} стал ${hx(flipped[last])} — это один бит. В хеше поменялось ${n} ${plural(n, 'бит', 'бита', 'бит')}.`;
+  }
+
+  // BLAKE3's tree is left-balanced: the left subtree always holds the largest power of two chunks that is smaller than the total.
+  function build(lo, hi) {
+    const n = hi - lo;
+    if (n === 1) return { i: lo, level: 0 };
+    let l = 1;
+    while (l * 2 < n) l *= 2;
+    const L = build(lo, lo + l), R = build(lo + l, hi);
+    return { L, R, level: Math.max(L.level, R.level) + 1 };
+  }
+
+  function drawTree(n) {
+    const W = 1000, base = 410, top = 64;
+    const root = build(0, n);
+    const step = root.level ? (base - top) / root.level : 0;
+    const gap = (W - 80) / n;
+    (function place(node) {
+      if (node.L) {
+        place(node.L); place(node.R);
+        node.x = (node.L.x + node.R.x) / 2;
+        node.y = base - node.level * step;
+      } else {
+        node.x = 40 + (node.i + 0.5) * gap;
+        node.y = base;
+      }
+    })(root);
+
+    const f = v => v.toFixed(1);
+    let arches = '', nodes = '', stones = '';
+    (function walk(node) {
+      if (!node.L) {
+        const w = Math.min(28, gap * 0.5);
+        stones += `<rect class="stone" x="${f(node.x - w / 2)}" y="${base - 6}" width="${f(w)}" height="18"/>`;
+        stones += `<text x="${f(node.x)}" y="${base + 44}" text-anchor="middle">${node.i}</text>`;
+        return;
+      }
+      walk(node.L); walk(node.R);
+      const r = (node.R.x - node.L.x) * 0.92;
+      arches += `<path class="arch" d="M${f(node.L.x)} ${f(node.L.y)} A${f(r)} ${f(r)} 0 0 1 ${f(node.x)} ${f(node.y)} A${f(r)} ${f(r)} 0 0 1 ${f(node.R.x)} ${f(node.R.y)}"/>`;
+      if (node !== root) nodes += `<circle class="node" cx="${f(node.x)}" cy="${f(node.y)}" r="4"/>`;
+    })(root);
+
+    const zeros = new Uint8Array(n * 1024);
+    const rootHex = HEX(blake3.hash(zeros)).slice(0, 8);
+    const kx = root.x, ky = root.y;
+    const key = `<polygon class="key" points="${f(kx - 11)},${f(ky - 9)} ${f(kx + 11)},${f(ky - 9)} ${f(kx + 7)},${f(ky + 9)} ${f(kx - 7)},${f(ky + 9)}"/>`;
+    const keyText = `<text class="keytext" x="${f(kx)}" y="${f(ky - 24)}" text-anchor="middle">корень · ${rootHex}…</text>`;
+    const floor = `<line class="floor" x1="0" x2="${W}" y1="${base + 16}" y2="${base + 16}"/>`;
+    $('tree').innerHTML = floor + arches + nodes + stones + (n > 1 ? key : '') + keyText;
+
+    $('sizeOut').textContent = n === 1
+      ? `1 КиБ нулей → 1 кусок, он же корень → ${rootHex}…`
+      : `${n} КиБ нулей → ${n} ${plural(n, 'кусок', 'куска', 'кусков')} → ${n - 1} ${plural(n - 1, 'узел', 'узла', 'узлов')} → корень ${rootHex}…`;
+  }
+
+  $('inscr').addEventListener('input', inscribe);
+  $('size').addEventListener('input', e => drawTree(+e.target.value));
+  inscribe();
+  drawTree(+$('size').value);
+})();
+</script>
+</body>
+</html>

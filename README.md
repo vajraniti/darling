@@ -1,8 +1,12 @@
 # darling — исследование стиля
 
-Мудборд и заметки по стилю: готика, эмо, опиум и всё, что рядом. Каждый стиль лежит в своей папке.
+Библиотека стилей: готика, эмо, опиум и всё, что рядом. Каждый стиль лежит в своей папке, и по ней новый чат должен уметь сделать вещь в этом стиле без ИИ-синтетики.
 
-Живой борд: https://claude.ai/artifact/SPYc7op74FSjvqbEnMtpvB (исходник — `board/moodboard.html`).
+Как с этим работать — в [`CLAUDE.md`](CLAUDE.md). Грабли, на которые уже наступали, — в [`rules/anti-synthetic.md`](rules/anti-synthetic.md).
+
+- Пилот — папка [`styles/goth`](styles/goth): бриф, 24 скриншота живых сайтов, 9 обложек канона, 20 работ в общественном достоянии и пример.
+- Пример — BLAKE3 в готике: https://claude.ai/artifact/Fw7WrYRjVW8AxtDibRGoon (исходник `styles/goth/example/`).
+- Первый мудборд v1, черновик: https://claude.ai/artifact/SPYc7op74FSjvqbEnMtpvB (исходник `board/moodboard.html`). Его стилизация — пример того, как делать не надо: шум слоем, моно-плашки, вкладки.
 
 ## Папки
 
@@ -14,7 +18,7 @@
 | [`styles/emo`](styles/emo) | MySpace angle, analog horror, Y2K-трайбл | 6, 9, 10 |
 | [`styles/paint`](styles/paint) | девушки красками, 厚涂, semi-realism | 7, 8 |
 | [`styles/opium`](styles/opium) | Opium / King Vamp, Whole Lotta Red | — |
-| [`styles/goth`](styles/goth) | канон готики 80-х и три готики под борд | — |
+| [`styles/goth`](styles/goth) | **пилот:** бриф, рефы, материал, пример BLAKE3 | — |
 
 ## Как я читаю стиль (общее)
 

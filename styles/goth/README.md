@@ -1,52 +1,92 @@
-# готика — канон и три готики под борд
+# готика — бриф
 
-Отдельных гот-рефов нет, поэтому здесь канон обложек 80-х и сравнение с бордом.
+**Суть.** Готика — это траур, камень и тишина, а не Хэллоуин. Найденная ч/б фотография, гравюра, статуя, надгробие, кружево, спрятанное лицо. Интерфейс молчит, говорит материал.
 
-**Главное:** готики в рефах на самом деле полно — спрятанное лицо, десатурация, вуаль, траур. Нет только блэклеттера, но его нет и в каноне готик-рока.
+Перед работой: открой глазами все картинки в `refs/` (что брать — в `refs/INDEX.md`), прочитай `../../rules/anti-synthetic.md`, посмотри `example/`.
 
-## Канон обложек
+## Канон: что такое готика в дизайне
 
-- **1980 · Bauhaus — In the Flat Field.** Ч/б фото Duane Michals 1949 года.
-- **1980 · Joy Division — Closer.** Martyn Atkins и Peter Saville, фото Bernard Pierre Wolff: надгробие на кладбище Стальено в Генуе.
-- **1981 · Siouxsie and the Banshees — Juju.** Rob O'Connor, статуэтка из Horniman Museum.
-- **1982 · Christian Death — Only Theatre of Pain.** Рисунки Rozz Williams, фото Ed Colver, «царапанные» буквы.
-- **1982, 1989 · The Cure — Pornography, Disintegration.** Parched Art: Andy Vella и Porl Thompson.
-- **1984 · Cocteau Twins — Treasure.** 23 Envelope: десатурированное фото Nigel Grierson, слоёная типографика Vaughan Oliver, драпировка и кружево.
-- **1987 · Sisters of Mercy — Floodland.** Фото Alistair Thain и Mike Owen.
+Обложки 1980–1989 (картинки в `refs/covers/`):
 
-## Маркеры
+- **Joy Division — Closer (1980).** Martyn Atkins и Peter Saville: кремовая бумага, тонкая рамка, ч/б фото надгробия со Стальено, крошечное «·CLOSER·» антиквой. Главный эталон сдержанности.
+- **Bauhaus — In the Flat Field (1980).** Фото Duane Michals в чёрном поле, как отпечаток в паспарту.
+- **Siouxsie — Juju (1981), Christian Death — Only Theatre of Pain (1982).** Настоящий коллаж и рисунок тушью с рукописными буквами.
+- **The Cure — Pornography (1982), Disintegration (1989).** Parched Art: размытые лица, цветы в темноте.
+- **Cocteau Twins — Treasure, This Mortal Coil — It'll End in Tears (1984).** 23 Envelope: десатурация, кружево, драпировка, мягкий фокус.
+- **Dead Can Dance — Within the Realm of a Dying Sun (1987).** Статуя под вуалью на кладбище.
 
-- Найденная ч/б фотография вместо нарисованной графики.
-- Камень и смерть: статуи, надгробия, кладбища.
-- Лицо спрятано или размыто.
-- Драпировка, кружево, десатурация.
-- Шрифт: царапанный от руки, классический гротеск или слоёный 4AD. Блэклеттер живёт в метале, тату, хип-хопе и у Chrome Hearts.
-- «Готическим» блэклеттер презрительно назвали гуманисты Ренессанса.
+Маркеры канона: найденная ч/б фотография вместо рисованной графики; камень и смерть; лицо спрятано или размыто; драпировка, кружево, десатурация. **Блэклеттера в каноне нет** — буквы либо классическая антиква, либо от руки.
 
-## Три готики под борд
+## Три ветки
 
-- **Ethereal goth / 4AD** — размытость, кружево, десатурация. Ложится на лилию и девушек красками.
-- **Romantic / victorian goth** — траур, вуаль, бледность, прерафаэлиты. Реф 7 — траурная невеста.
-- **Trad goth / deathrock** — чёрное, спрятанные лица, буквы от руки. Под тёмные эмо-рефы.
+| Ветка | Что это | Когда брать |
+|---|---|---|
+| Ethereal / 4AD | размытость, десатурация, кружево, мягкий фокус | нежное, ангельское, «девушки красками» |
+| Romantic / victorian | траур, вуаль, бледность, кладбищенская скульптура, прерафаэлиты | портрет, вуаль, «траурная невеста» |
+| Trad / deathrock | чёрное, спрятанные лица, рисунок тушью, буквы от руки | грубое, тёмное, эмо-граница |
 
-Мимо: whimsigoth (самоцветы, ведьмы, уют 90-х) и nu goth (минималистичный «хипстер-гот»).
+## Как делают живые сайты (скрины в `refs/sites/`)
 
-Ещё рядом: **witch house** (Мичиган, конец 2000-х, термин Travis Egedy 2009) и **black metal logo** (Christophe Szpajdel, лого Emperor 1991).
+| Сайт | Фон и цвет | Шрифты | Ход |
+|---|---|---|---|
+| chelseawolfe.com | `#000`, кость `#e9e3d8`, серый `#9c958a` | Cormorant Garamond; Schwabacher только в имени и навигации | видео со свечами на весь экран |
+| coldcave.net | `#000`, белый | Helvetica Now Black капсом | каменный херувим, архив настоящих флаеров |
+| sacredbonesrecords.com | крем, текст `#231f20`, кирпич `#45190f` | EB Garamond + Libre Franklin | обложка релиза как герой |
+| anndemeulemeester.com | `#fff` | Helvetica + Fournier | десатурированное фото замка |
+| rickowens.eu | `#fff`/`#000` | Gotham 10–11px | одна драпированная фигура, огромная пустота |
+| enfantsrichesdeprimes.com | `#fff`, фото | Helvetica Neue Bold Condensed | вспышка в лоб, «AUTOMNE / HIVER 26» |
+| carolchristianpoell.com | `#020a01`, `#707070` | свой light, 10px | на экране только знак |
+| chromehearts.com | `#e2e2e2`, `#717171`, красный `#c00` | Roboto; блэклеттер только в картуше | макро серебра — готика без чёрного |
+| boyharsher.com | `#fff`, синий `#1990c6` | Schmalfette Grotesk + Baskerville | один цвет через всё |
 
-## За кем следить
+Анти-реф: lebanonhanover.com — Poppins и Inter капсом поверх затемнённого фото. Так выглядит дешёвый дарк-шаблон.
 
-Xanthe Hutchinson (фото) · Helen McGuckin (стилист) · Annie Bertram (фото) · Angela Mai (иллюстрация) · Ella Moe (постеры)
+## Палитра
 
-## Ссылки
+Один фон плюс максимум один акцент. Значения — с живых сайтов и обложек.
 
-- [It's Nice That: готика в графдизайне, 2025](https://itsnicethat.com/features/gothic-resurrection-the-thing-that-wouldnt-die-graphic-design-illustration-271025)
-- [FIT: Gothic: Dark Glamour](https://fitnyc.edu/museum/exhibitions/gothic-dark-glamour.php)
-- [Met: Death Becomes Her](https://www.metmuseum.org/en/press-releases/death-becomes-her-2014-exhibitions)
-- [Allentown: Gothic to Goth](https://www.allentownartmuseum.org/exhibitions/past/gothic-to-goth-embracing-the-dark-side/)
-- [Creative Review: Andy Vella](https://www.creativereview.co.uk/how-i-got-here-andy-vella/)
-- [Long Live Vinyl: Vaughan Oliver](https://longlivevinyl.net/2018/08/17/cover-star-vaughan-oliver-interview/)
-- [V&A: постер Treasure](https://collections.vam.ac.uk/item/O22931)
-- [Louder: как делали Juju](https://loudersound.com/features/siouxsie-and-the-banshees-how-we-made-juju)
-- [Science Museum: конверт Closer](https://collection.sciencemuseumgroup.org.uk/documents/aa110124230)
-- [Dazed: гот-сообщества UK](https://www.dazeddigital.com/art-photography/article/64651/1/goth-subculture-uk-photos-xanthe-hutchinson-helen-mcguckin)
-- [Gothic Beauty: Annie Bertram](https://www.gothicbeauty.com/2025/12/annie-bertram-25-years-of-gothic-beauty-original-contributor-interview/)
+| Роль | Значение | Откуда |
+|---|---|---|
+| чёрный фон | `#000000` | Cold Cave, Chelsea Wolfe |
+| почти-чёрный с оттенком | `#020a01` | Carol Christian Poell |
+| камень / холодный светлый | `#e2e2e2`, `#e5e3de` | Chrome Hearts; пример BLAKE3 |
+| кость (текст на чёрном) | `#e9e3d8` | Chelsea Wolfe |
+| тёплый серый (вторичный) | `#9c958a` | Chelsea Wolfe |
+| кирпич | `#45190f` | Sacred Bones |
+| кровь | `#cc0000` | Chrome Hearts |
+| холодный синий | `#1990c6` | Boy Harsher |
+
+## Шрифты
+
+Одна-две гарнитуры. Характер — только в знаке.
+
+| Роль | У живых | Бесплатно (Google Fonts) | Кириллица |
+|---|---|---|---|
+| антиква — текст и заголовки | EB Garamond, Cormorant, Fournier, Baskerville | **EB Garamond**, Cormorant Garamond, Old Standard TT, Spectral | есть у всех четырёх |
+| гротеск — мелкий интерфейс | Helvetica, Gotham, Libre Franklin | системная Helvetica/Arial, Libre Franklin, Arimo | есть |
+| знак (логотип, одно слово) | Old English, Schwabacher | UnifrakturMaguntia, Pirata One, Grenze Gotisch | нет — только латиница |
+| моно — только цифры и код | IBM Plex Mono, DM Mono | IBM Plex Mono или системный моноширинный | есть |
+
+## Композиция
+
+- Первый экран — один настоящий образ: фото, гравюра или видео. Либо во весь экран, либо в рамке на поле, как Closer.
+- Меню на 3–6 слов. Структура из предмета: релизы, сезоны, номера пластин.
+- Текст мелкий и спокойный. Капс — тем же шрифтом, без моно-плашек.
+- Много пустоты. Можно оставить на экране только знак.
+- Надгробная симметрия — по центру ставь только то, что и в жизни стоит по центру: надпись, эпитафию.
+
+## Картинки
+
+- Бери из `material/` (CC0 и PD, лицензии в `material/SOURCES.md`) или из открытого доступа музеев: Met Open Access отдаёт CC0 и работает, Wikimedia часто режет запросы.
+- Оставляй родной тон отпечатка: сепию альбумина, бумагу гравюры. Обрабатывай файл до вёрстки, если вообще нужно: `magick in.jpg -colorspace Gray -level 6%,94% out.jpg`.
+- Рваные края, пятна и следы времени на скане — это и есть фактура. Не дорисовывай её.
+
+## Нельзя (сверх общих правил)
+
+- Хэллоуин: черепа-клипарт, летучие мыши, паутина, пентаграммы, CSS-туман, Creepster и Nosifer, фиолетовые градиенты.
+- Блэклеттер в тексте.
+- Чёрный фон по умолчанию «потому что готика». Closer, Chrome Hearts и Ann Demeulemeester — светлые.
+
+## Пример
+
+`example/` — сайт про хеш-функцию BLAKE3 в готике: готика там, где её никогда не было. Как он собран — в `example/README.md`.
