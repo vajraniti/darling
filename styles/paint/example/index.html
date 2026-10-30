@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Подпись под вуалью</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap">
+<style>
+/* Layout: a letter beside a painting. One soft ground sampled from the painting itself, one light serif, the signature set under the letter like ink. No blur, fog or glitter added in code: all softness comes from the paintings. */
+:root {
+  --mist: #e6e0d6;
+  --ink: #3a4231;
+  --ash: #646850;
+  --hair: #ccc6b9;
+  --gold: #8a7c45;
+  --f: "Cormorant Garamond", "Cormorant", Garamond, "Times New Roman", serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--mist);
+  color: var(--ink);
+  font-family: var(--f);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.5;
+  font-variant-numeric: lining-nums;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+p { margin: 0; }
+a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset: 4px; }
+a:focus-visible, button:focus-visible, textarea:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
+.page { max-width: 1240px; margin: 0 auto; }
+
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; flex-wrap: wrap; padding-block: 26px 0; }
+.mark { font-style: italic; font-size: 26px; font-weight: 300; text-decoration: none; letter-spacing: .01em; }
+.top nav { display: flex; gap: 26px; flex-wrap: wrap; }
+.top nav a { text-decoration: none; font-size: 19px; }
+.top nav a:hover { text-decoration: underline; }
+
+figure { margin: 0; }
+figure img { display: block; width: 100%; height: auto; }
+figcaption { font-size: 15px; color: var(--ash); font-style: italic; margin-top: 10px; }
+
+.hero { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 64px; align-items: start; padding-block: 40px 130px; }
+.letter { display: flex; flex-direction: column; gap: 22px; min-width: 0; padding-top: 12px; }
+.lead { font-size: 24px; line-height: 1.35; font-weight: 300; max-width: 24em; }
+.lbl { font-size: 15px; color: var(--ash); font-style: italic; }
+.letter textarea { font: italic 300 25px/1.45 var(--f); color: var(--ink); background: transparent; border: 0; border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); padding: 16px 0; width: 100%; resize: none; min-height: 8.2em; border-radius: 0; }
+.sig { display: flex; flex-direction: column; gap: 8px; }
+.sig pre { margin: 0; font-family: var(--f); font-size: 17px; line-height: 1.55; letter-spacing: .06em; text-transform: uppercase; font-variant-numeric: lining-nums tabular-nums; white-space: pre-wrap; word-break: break-all; color: var(--gold); }
+.state { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: baseline; }
+.state p { font-size: 22px; }
+.state p.broken { font-style: italic; }
+.state button { font: italic 18px var(--f); color: var(--ink); background: none; border: 0; padding: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; cursor: pointer; }
+
+section.part { border-top: 1px solid var(--hair); padding-block: 30px 130px; display: flex; flex-direction: column; gap: 40px; scroll-margin-top: 16px; }
+.part h2 { font-weight: 300; font-size: clamp(38px, 4.8vw, 64px); line-height: 1; margin: 0; }
+.cols { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 64px; align-items: start; }
+.text { display: flex; flex-direction: column; gap: 18px; max-width: 30em; min-width: 0; }
+.text .small { font-size: 17px; color: var(--ash); }
+.key { margin: 0; font-family: var(--f); font-size: 17px; line-height: 1.55; letter-spacing: .06em; text-transform: uppercase; font-variant-numeric: lining-nums tabular-nums; white-space: pre-wrap; word-break: break-all; }
+.promise { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); }
+.promise figure { max-width: 430px; }
+.vows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.vows li { display: grid; grid-template-columns: minmax(0, 11em) minmax(0, 1fr); gap: 8px 32px; padding-block: 20px; border-top: 1px solid var(--hair); }
+.vows b { font-weight: 400; font-style: italic; font-size: 26px; line-height: 1.2; }
+
+.colophon { border-top: 1px solid var(--hair); padding-block: 28px 80px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; font-size: 15px; color: var(--ash); }
+.colophon h2 { font-weight: 500; font-size: 17px; color: var(--ink); margin: 0 0 8px; }
+.colophon p + p { margin-top: 8px; }
+
+@media (max-width: 900px) {
+  .hero, .cols { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+  .hero { padding-block: 24px 90px; }
+  section.part { padding-block: 24px 90px; }
+  .vows li { grid-template-columns: minmax(0, 1fr); }
+  .colophon { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 460px) {
+  .colophon { grid-template-columns: minmax(0, 1fr); }
+  .letter textarea { font-size: 22px; }
+}
+</style>
+
+</head>
+<body>
+<div class="page">
+<header class="top">
+  <a class="mark" href="#top">подпись</a>
+  <nav aria-label="Разделы"><a href="#klyuchi">ключи</a><a href="#obeshchanie">обещание</a></nav>
+</header>
+
+<main id="top">
+<div class="hero">
+  <figure><img src="img/gege-veil.jpg" alt="Бледная девушка с белыми волосами под вуалью, жемчужный чокер, снег" width="736" height="980"><figcaption>Из рефов Гэгэ. Автор не установлен.</figcaption></figure>
+  <div class="letter">
+    <p class="lead">Электронная подпись. Письмо подписывают закрытым ключом, а проверяет любой — открытым. Так видно, кто писал и что после подписи не тронули ни буквы.</p>
+    <label class="lbl" for="pismo">Письмо — его можно править</label>
+    <textarea id="pismo" spellcheck="false">Remember me when I am gone away,
+Gone far away into the silent land;
+When you can no more hold me by the hand,
+Nor I half turn to go yet turning stay.</textarea>
+    <div class="sig">
+      <span class="lbl" id="sigLabel">подпись</span>
+      <pre id="sig" aria-live="polite">…</pre>
+    </div>
+    <div class="state">
+      <p id="state" aria-live="polite">Ключи создаются…</p>
+      <button type="button" id="resign" hidden>подписать заново</button>
+    </div>
+  </div>
+</div>
+
+<section class="part" id="klyuchi" aria-labelledby="h-klyuchi">
+  <h2 id="h-klyuchi">Два ключа</h2>
+  <div class="cols">
+    <figure><img src="img/gege-ghost.jpg" alt="Призрачная девушка в сером на чёрном" width="736" height="736"><figcaption>Из рефов Гэгэ. Автор не установлен.</figcaption></figure>
+    <div class="text">
+      <p><i>Закрытый ключ</i> знает только тот, кто подписывает. Здесь он родился в твоём браузере, никуда не уходит и не показывается даже на этой странице — им только ставят подпись.</p>
+      <p><i>Открытый ключ</i> можно раздать всем. Им подпись только проверяют, подделать её с ним нельзя.</p>
+      <div class="sig">
+        <span class="lbl" id="pubLabel">открытый ключ</span>
+        <pre class="key" id="pub">…</pre>
+      </div>
+      <p class="small" id="algNote"></p>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="obeshchanie" aria-labelledby="h-obeshchanie">
+  <h2 id="h-obeshchanie">Что обещает подпись</h2>
+  <div class="cols promise">
+  <ul class="vows">
+    <li><b>Целостность</b><p>Подпись выдаёт любое изменение письма. Поменяй наверху одну запятую — и она перестанет сходиться.</p></li>
+    <li><b>Подлинность</b><p>Подпись подтверждает, кто подписал: сходится она только с открытым ключом того, кто держал закрытый.</p></li>
+    <li><b>Неотказуемость</b><p>Получатель может показать подпись третьему лицу как доказательство, и отречься от неё потом непросто. Держится это, пока закрытый ключ только у тебя.</p></li>
+  </ul>
+  <figure><img src="img/gege-veil-pearls.jpg" alt="Жемчужный чокер под вуалью, деталь" width="430" height="290"><figcaption>Деталь того же рефа: чокер под вуалью.</figcaption></figure>
+  </div>
+</section>
+</main>
+
+<footer class="colophon">
+  <div>
+    <h2>Подпись</h2>
+    <p>Три обещания — из стандарта NIST FIPS 186-5 «Digital Signature Standard», 3 февраля 2023.</p>
+    <p>Ed25519 — RFC 8032: ключи по 32 байта, подпись 64 байта, подпись детерминирована.</p>
+  </div>
+  <div>
+    <h2>Эта страница</h2>
+    <p>Ключи создаёт и подписывает Web Crypto API твоего браузера. Ничего не отправляется наружу, при каждом открытии ключи новые.</p>
+  </div>
+  <div>
+    <h2>Письмо</h2>
+    <p>Christina Rossetti, сонет «Remember». Текст — Project Gutenberg, eBook #19188.</p>
+  </div>
+  <div>
+    <h2>Изображения</h2>
+    <p>Обе девушки и деталь с чокером — из рефов Гэгэ, авторы не установлены.</p>
+  </div>
+</footer>
+</div>
+
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const enc = new TextEncoder();
+  const hex = b => Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
+  const lines = (h, n) => h.match(new RegExp('.{1,' + n + '}', 'g')).join('\n');
+  let keys, alg, signature;
+
+  async function makeKeys() {
+    try {
+      keys = await crypto.subtle.generateKey({ name: 'Ed25519' }, true, ['sign', 'verify']);
+      alg = { name: 'Ed25519' };
+      return 'Ed25519';
+    } catch (e) {
+      keys = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign', 'verify']);
+      alg = { name: 'ECDSA', hash: 'SHA-256' };
+      return 'ECDSA P-256';
+    }
+  }
+
+  async function sign() {
+    signature = new Uint8Array(await crypto.subtle.sign(alg, keys.privateKey, enc.encode($('pismo').value)));
+    $('sig').textContent = lines(hex(signature), 32);
+    await verify();
+  }
+
+  async function verify() {
+    const ok = await crypto.subtle.verify(alg, keys.publicKey, signature, enc.encode($('pismo').value));
+    const s = $('state');
+    s.textContent = ok ? 'Подпись сходится.' : 'Подпись не сходится: письмо изменили после подписи.';
+    s.className = ok ? '' : 'broken';
+    $('resign').hidden = ok;
+  }
+
+  async function start() {
+    if (!window.crypto || !crypto.subtle) {
+      $('state').textContent = 'Браузер не дал доступа к криптографии: страница должна открываться по https.';
+      return;
+    }
+    const name = await makeKeys();
+    const pub = new Uint8Array(await crypto.subtle.exportKey('raw', keys.publicKey));
+    $('pub').textContent = lines(hex(pub), 32);
+    $('pubLabel').textContent = `открытый ключ · ${name} · ${pub.length} байт`;
+    $('sigLabel').textContent = `подпись · ${name} · 64 байта`;
+    $('algNote').textContent = name === 'Ed25519'
+      ? 'Подпись Ed25519 детерминирована: то же письмо тем же ключом даёт ту же подпись.'
+      : 'Этот браузер не умеет Ed25519, поэтому здесь ECDSA P-256: подпись каждый раз новая, но проверяется так же.';
+    await sign();
+    $('pismo').addEventListener('input', verify);
+    $('resign').addEventListener('click', sign);
+  }
+
+  start().catch(e => { $('state').textContent = 'Не получилось создать ключи: ' + e.message; });
+})();
+</script>
+</body>
+</html>
