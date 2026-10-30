@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TCP: три аккорда</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Courier+Prime&display=swap">
+<style>
+/* Layout: a xeroxed zine stapled on white. Each part is one photocopied sheet beside typed numbers; the hero redraws the 1977 Sideburns page with TCP flags for chords. Helvetica for words, a typewriter for numbers. One light look on purpose: toner on paper. No generated texture: all grain is in the image files. */
+:root {
+  --paper: #ffffff;
+  --toner: #141414;
+  --grey: #6d6b66;
+  --hair: #d9d7d1;
+  --g: "Helvetica Neue", Helvetica, Arimo, Arial, sans-serif;
+  --m: "Courier Prime", "Courier New", Courier, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--toner);
+  font-family: var(--g);
+  font-size: 18px;
+  line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+p { margin: 0; }
+a { color: var(--toner); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--toner); outline-offset: 3px; }
+.page { max-width: 1280px; margin: 0 auto; }
+
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px 24px; flex-wrap: wrap; padding-block: 22px 0; font-size: 15px; }
+.mark { font-weight: 700; text-decoration: none; }
+.top nav { display: flex; gap: 4px 20px; flex-wrap: wrap; }
+.top nav a { text-decoration: none; }
+.top nav a:hover { text-decoration: underline; }
+
+figure { margin: 0; min-width: 0; }
+figure img { display: block; width: 100%; height: auto; max-width: 100%; }
+figcaption { font-size: 14px; line-height: 1.4; color: var(--grey); margin-top: 10px; max-width: 40em; }
+
+.hero { display: grid; grid-template-columns: minmax(0, 13fr) minmax(0, 11fr); gap: clamp(32px, 5vw, 72px); align-items: start; padding-block: 28px 128px; }
+.zine { display: flex; flex-direction: column; gap: 28px; min-width: 0; }
+.epi { display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 1.45; color: var(--grey); max-width: 30em; }
+.epi q { color: var(--toner); font-size: 17px; quotes: "\201C" "\201D"; }
+.chords { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 22px; }
+.chord { display: grid; grid-template-columns: 112px minmax(0, 1fr); column-gap: 18px; row-gap: 8px; align-items: start; }
+.chord:nth-child(2) { margin-left: 11%; }
+.chord:nth-child(3) { margin-left: 22%; }
+.chord svg { grid-row: 1 / span 2; display: block; width: 112px; height: auto; color: var(--toner); overflow: visible; }
+.chord svg .lbl, .chord svg .bit { font-family: var(--m); font-size: 10px; fill: var(--toner); }
+.chord svg .off { fill: var(--grey); }
+.say { font-size: 21px; font-weight: 700; line-height: 1.15; padding-top: 36px; }
+.who { font-size: 14px; color: var(--grey); }
+.seg { grid-column: 1 / -1; font-family: var(--m); font-size: 14px; line-height: 1.4; font-variant-numeric: tabular-nums; }
+.legend { font-size: 14px; line-height: 1.45; color: var(--grey); max-width: 34em; }
+h1 { margin: 0; font-size: clamp(34px, 4.2vw, 58px); line-height: 1.05; font-weight: 700; letter-spacing: -0.02em; text-decoration: underline; text-decoration-thickness: 0.085em; text-underline-offset: 0.16em; text-wrap: balance; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: baseline; }
+button { font: 700 15px/1.3 var(--g); color: var(--toner); background: none; border: 0; padding: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; cursor: pointer; }
+button:hover { text-decoration-thickness: 2px; }
+.note { font-size: 14px; color: var(--grey); font-family: var(--m); }
+
+section.part { border-top: 1px solid var(--toner); padding-block: 22px 128px; display: flex; flex-direction: column; gap: 36px; scroll-margin-top: 12px; }
+h2 { margin: 0; font-size: clamp(32px, 3.8vw, 52px); line-height: 1.04; font-weight: 700; letter-spacing: -0.02em; text-wrap: balance; }
+.cols { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 5vw, 72px); align-items: start; }
+.cols.flip { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+.text { display: flex; flex-direction: column; gap: 16px; max-width: 34em; min-width: 0; }
+.small { font-size: 15px; line-height: 1.45; color: var(--grey); }
+
+.fig { margin: 0; font-family: var(--m); font-size: 13.5px; line-height: 1.6; white-space: pre; overflow-x: auto; padding-block: 14px; border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); font-variant-numeric: tabular-nums; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 14px; color: var(--grey); }
+.field input { font: 400 21px/1.3 var(--g); color: var(--toner); background: transparent; border: 0; border-bottom: 1px solid var(--toner); border-radius: 0; padding: 4px 0 6px; width: 100%; }
+.field output { font-size: 14px; color: var(--grey); }
+
+dl.calc { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 7px 20px; margin: 0; font-size: 15px; line-height: 1.4; padding-top: 12px; border-top: 1px solid var(--hair); }
+dl.calc dt { color: var(--grey); min-width: 0; }
+dl.calc dd { margin: 0; font-family: var(--m); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+dl.calc .em { color: var(--toner); font-weight: 700; }
+dl.calc .line { border-top: 1px solid var(--toner); padding-top: 7px; }
+.verdict { font-size: 15px; line-height: 1.45; }
+
+.code { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.code pre { margin: 0; font-family: var(--m); font-size: 14px; line-height: 1.6; white-space: pre; overflow-x: auto; padding-top: 10px; border-top: 1px solid var(--hair); }
+
+.colophon { border-top: 1px solid var(--toner); padding-block: 22px 72px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; font-size: 14px; line-height: 1.45; color: var(--grey); }
+.colophon h2 { font-size: 15px; letter-spacing: 0; line-height: 1.3; color: var(--toner); margin: 0 0 8px; }
+.colophon p + p { margin-top: 8px; }
+
+@media (max-width: 900px) {
+  .hero, .cols, .cols.flip { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .hero { padding-block: 20px 96px; }
+  .cols .pic { order: -1; }
+  section.part { padding-block: 20px 96px; }
+  .colophon { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  body { font-size: 17px; }
+  .chord { grid-template-columns: 96px minmax(0, 1fr); column-gap: 14px; }
+  .chord svg { width: 96px; }
+  .chord:nth-child(2) { margin-left: 7%; }
+  .chord:nth-child(3) { margin-left: 14%; }
+  .say { font-size: 19px; padding-top: 30px; }
+  .seg { font-size: 12.5px; }
+  .fig { font-size: 12px; }
+  .colophon { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+
+</head>
+<body>
+<div class="page">
+<header class="top">
+  <a class="mark" href="#top">TCP: три аккорда</a>
+  <nav aria-label="Разделы"><a href="#ruk">рукопожатие</a><a href="#nomer">номер</a><a href="#flud">флуд</a><a href="#proverka">проверь</a></nav>
+</header>
+
+<main id="top">
+<div class="hero">
+  <figure class="pic"><img src="img/handshake-1922-copy3.jpg" alt="Ксерокопия фотографии: двое мужчин в костюмах жмут руки, лица вне кадра" width="1409" height="1580"><figcaption>Тут Джексон и Джек Джонсон жмут руки, 1922. Фото W. E. Palmer, Library of Congress. Копия с копии с копии.</figcaption></figure>
+  <div class="zine">
+    <div class="epi">
+      <q lang="en">This is a chord. This is another. This is a third. Now form a band.</q>
+      <p>Вот аккорд. Вот ещё один. Вот третий. А теперь собери группу. Тони Мун, фэнзин Sideburns № 1, январь 1977.</p>
+    </div>
+    <ol class="chords" aria-label="Три сегмента рукопожатия">
+      <li class="chord"><svg viewBox="0 0 112 128" role="img" aria-label="Аккорд SYN: подняты флаги SYN, байт флагов 0x02"><text class="lbl" x="8.0" y="9" text-anchor="middle">C</text><text class="lbl" x="8.0" y="19" text-anchor="middle">W</text><text class="lbl" x="8.0" y="29" text-anchor="middle">R</text><text class="lbl" x="21.7" y="9" text-anchor="middle">E</text><text class="lbl" x="21.7" y="19" text-anchor="middle">C</text><text class="lbl" x="21.7" y="29" text-anchor="middle">E</text><text class="lbl" x="35.4" y="9" text-anchor="middle">U</text><text class="lbl" x="35.4" y="19" text-anchor="middle">R</text><text class="lbl" x="35.4" y="29" text-anchor="middle">G</text><text class="lbl" x="49.1" y="9" text-anchor="middle">A</text><text class="lbl" x="49.1" y="19" text-anchor="middle">C</text><text class="lbl" x="49.1" y="29" text-anchor="middle">K</text><text class="lbl" x="62.9" y="9" text-anchor="middle">P</text><text class="lbl" x="62.9" y="19" text-anchor="middle">S</text><text class="lbl" x="62.9" y="29" text-anchor="middle">H</text><text class="lbl" x="76.6" y="9" text-anchor="middle">R</text><text class="lbl" x="76.6" y="19" text-anchor="middle">S</text><text class="lbl" x="76.6" y="29" text-anchor="middle">T</text><text class="lbl" x="90.3" y="9" text-anchor="middle">S</text><text class="lbl" x="90.3" y="19" text-anchor="middle">Y</text><text class="lbl" x="90.3" y="29" text-anchor="middle">N</text><text class="lbl" x="104.0" y="9" text-anchor="middle">F</text><text class="lbl" x="104.0" y="19" text-anchor="middle">I</text><text class="lbl" x="104.0" y="29" text-anchor="middle">N</text><line x1="8.0" y1="40" x2="104.0" y2="40" stroke="currentColor" stroke-width="3"/><line x1="8.0" y1="62" x2="104.0" y2="62" stroke="currentColor" stroke-width="1.2"/><line x1="8.0" y1="84" x2="104.0" y2="84" stroke="currentColor" stroke-width="1.2"/><line x1="8.0" y1="106" x2="104.0" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="8.0" y1="40" x2="8.0" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="21.7" y1="40" x2="21.7" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="35.4" y1="40" x2="35.4" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="49.1" y1="40" x2="49.1" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="62.9" y1="40" x2="62.9" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="76.6" y1="40" x2="76.6" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="90.3" y1="40" x2="90.3" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="104.0" y1="40" x2="104.0" y2="106" stroke="currentColor" stroke-width="1.2"/><path d="M85.8 46.5L94.8 55.5M94.8 46.5L85.8 55.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" fill="none"/><text class="bit off" x="8.0" y="123" text-anchor="middle">0</text><text class="bit off" x="21.7" y="123" text-anchor="middle">0</text><text class="bit off" x="35.4" y="123" text-anchor="middle">0</text><text class="bit off" x="49.1" y="123" text-anchor="middle">0</text><text class="bit off" x="62.9" y="123" text-anchor="middle">0</text><text class="bit off" x="76.6" y="123" text-anchor="middle">0</text><text class="bit" x="90.3" y="123" text-anchor="middle">1</text><text class="bit off" x="104.0" y="123" text-anchor="middle">0</text></svg><p class="say">← вот аккорд</p><p class="who">SYN · клиент → сервер</p><p class="seg" id="seg1"></p></li>
+      <li class="chord"><svg viewBox="0 0 112 128" role="img" aria-label="Аккорд SYN, ACK: подняты флаги ACK, SYN, байт флагов 0x12"><text class="lbl" x="8.0" y="9" text-anchor="middle">C</text><text class="lbl" x="8.0" y="19" text-anchor="middle">W</text><text class="lbl" x="8.0" y="29" text-anchor="middle">R</text><text class="lbl" x="21.7" y="9" text-anchor="middle">E</text><text class="lbl" x="21.7" y="19" text-anchor="middle">C</text><text class="lbl" x="21.7" y="29" text-anchor="middle">E</text><text class="lbl" x="35.4" y="9" text-anchor="middle">U</text><text class="lbl" x="35.4" y="19" text-anchor="middle">R</text><text class="lbl" x="35.4" y="29" text-anchor="middle">G</text><text class="lbl" x="49.1" y="9" text-anchor="middle">A</text><text class="lbl" x="49.1" y="19" text-anchor="middle">C</text><text class="lbl" x="49.1" y="29" text-anchor="middle">K</text><text class="lbl" x="62.9" y="9" text-anchor="middle">P</text><text class="lbl" x="62.9" y="19" text-anchor="middle">S</text><text class="lbl" x="62.9" y="29" text-anchor="middle">H</text><text class="lbl" x="76.6" y="9" text-anchor="middle">R</text><text class="lbl" x="76.6" y="19" text-anchor="middle">S</text><text class="lbl" x="76.6" y="29" text-anchor="middle">T</text><text class="lbl" x="90.3" y="9" text-anchor="middle">S</text><text class="lbl" x="90.3" y="19" text-anchor="middle">Y</text><text class="lbl" x="90.3" y="29" text-anchor="middle">N</text><text class="lbl" x="104.0" y="9" text-anchor="middle">F</text><text class="lbl" x="104.0" y="19" text-anchor="middle">I</text><text class="lbl" x="104.0" y="29" text-anchor="middle">N</text><line x1="8.0" y1="40" x2="104.0" y2="40" stroke="currentColor" stroke-width="3"/><line x1="8.0" y1="62" x2="104.0" y2="62" stroke="currentColor" stroke-width="1.2"/><line x1="8.0" y1="84" x2="104.0" y2="84" stroke="currentColor" stroke-width="1.2"/><line x1="8.0" y1="106" x2="104.0" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="8.0" y1="40" x2="8.0" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="21.7" y1="40" x2="21.7" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="35.4" y1="40" x2="35.4" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="49.1" y1="40" x2="49.1" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="62.9" y1="40" x2="62.9" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="76.6" y1="40" x2="76.6" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="90.3" y1="40" x2="90.3" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="104.0" y1="40" x2="104.0" y2="106" stroke="currentColor" stroke-width="1.2"/><path d="M44.6 46.5L53.6 55.5M53.6 46.5L44.6 55.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" fill="none"/><path d="M85.8 46.5L94.8 55.5M94.8 46.5L85.8 55.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" fill="none"/><text class="bit off" x="8.0" y="123" text-anchor="middle">0</text><text class="bit off" x="21.7" y="123" text-anchor="middle">0</text><text class="bit off" x="35.4" y="123" text-anchor="middle">0</text><text class="bit" x="49.1" y="123" text-anchor="middle">1</text><text class="bit off" x="62.9" y="123" text-anchor="middle">0</text><text class="bit off" x="76.6" y="123" text-anchor="middle">0</text><text class="bit" x="90.3" y="123" text-anchor="middle">1</text><text class="bit off" x="104.0" y="123" text-anchor="middle">0</text></svg><p class="say">← вот ещё один</p><p class="who">SYN, ACK · сервер → клиент</p><p class="seg" id="seg2"></p></li>
+      <li class="chord"><svg viewBox="0 0 112 128" role="img" aria-label="Аккорд ACK: подняты флаги ACK, байт флагов 0x10"><text class="lbl" x="8.0" y="9" text-anchor="middle">C</text><text class="lbl" x="8.0" y="19" text-anchor="middle">W</text><text class="lbl" x="8.0" y="29" text-anchor="middle">R</text><text class="lbl" x="21.7" y="9" text-anchor="middle">E</text><text class="lbl" x="21.7" y="19" text-anchor="middle">C</text><text class="lbl" x="21.7" y="29" text-anchor="middle">E</text><text class="lbl" x="35.4" y="9" text-anchor="middle">U</text><text class="lbl" x="35.4" y="19" text-anchor="middle">R</text><text class="lbl" x="35.4" y="29" text-anchor="middle">G</text><text class="lbl" x="49.1" y="9" text-anchor="middle">A</text><text class="lbl" x="49.1" y="19" text-anchor="middle">C</text><text class="lbl" x="49.1" y="29" text-anchor="middle">K</text><text class="lbl" x="62.9" y="9" text-anchor="middle">P</text><text class="lbl" x="62.9" y="19" text-anchor="middle">S</text><text class="lbl" x="62.9" y="29" text-anchor="middle">H</text><text class="lbl" x="76.6" y="9" text-anchor="middle">R</text><text class="lbl" x="76.6" y="19" text-anchor="middle">S</text><text class="lbl" x="76.6" y="29" text-anchor="middle">T</text><text class="lbl" x="90.3" y="9" text-anchor="middle">S</text><text class="lbl" x="90.3" y="19" text-anchor="middle">Y</text><text class="lbl" x="90.3" y="29" text-anchor="middle">N</text><text class="lbl" x="104.0" y="9" text-anchor="middle">F</text><text class="lbl" x="104.0" y="19" text-anchor="middle">I</text><text class="lbl" x="104.0" y="29" text-anchor="middle">N</text><line x1="8.0" y1="40" x2="104.0" y2="40" stroke="currentColor" stroke-width="3"/><line x1="8.0" y1="62" x2="104.0" y2="62" stroke="currentColor" stroke-width="1.2"/><line x1="8.0" y1="84" x2="104.0" y2="84" stroke="currentColor" stroke-width="1.2"/><line x1="8.0" y1="106" x2="104.0" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="8.0" y1="40" x2="8.0" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="21.7" y1="40" x2="21.7" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="35.4" y1="40" x2="35.4" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="49.1" y1="40" x2="49.1" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="62.9" y1="40" x2="62.9" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="76.6" y1="40" x2="76.6" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="90.3" y1="40" x2="90.3" y2="106" stroke="currentColor" stroke-width="1.2"/><line x1="104.0" y1="40" x2="104.0" y2="106" stroke="currentColor" stroke-width="1.2"/><path d="M44.6 46.5L53.6 55.5M53.6 46.5L44.6 55.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" fill="none"/><text class="bit off" x="8.0" y="123" text-anchor="middle">0</text><text class="bit off" x="21.7" y="123" text-anchor="middle">0</text><text class="bit off" x="35.4" y="123" text-anchor="middle">0</text><text class="bit" x="49.1" y="123" text-anchor="middle">1</text><text class="bit off" x="62.9" y="123" text-anchor="middle">0</text><text class="bit off" x="76.6" y="123" text-anchor="middle">0</text><text class="bit off" x="90.3" y="123" text-anchor="middle">0</text><text class="bit off" x="104.0" y="123" text-anchor="middle">0</text></svg><p class="say">← вот третий</p><p class="who">ACK · клиент → сервер</p><p class="seg" id="seg3"></p></li>
+    </ol>
+    <h1>а теперь установи соединение</h1>
+    <div class="btns"><button type="button" id="again">новое соединение</button><span class="note" id="conn" aria-live="polite"></span></div>
+    <p class="legend">Струны — восемь флагов TCP в порядке RFC: CWR, ECE, URG, ACK, PSH, RST, SYN, FIN. Крестик — флаг поднят. Под сеткой тот же байт в битах.</p>
+  </div>
+</div>
+
+<section class="part" id="ruk" aria-labelledby="h-ruk">
+  <h2 id="h-ruk">рукопожатие</h2>
+  <div class="cols">
+    <div class="text">
+      <p>Каждая сторона называет свой начальный номер и ждёт в ответ: принято. Выходит четыре сообщения: «мой номер X», «принял X», «мой номер Y», «принял Y». Второе и третье уходят одним сегментом, поэтому аккордов три.</p>
+      <p>Подтверждение — это номер, который сторона ждёт следующим. SYN занимает в нумерации одно место, поэтому на SYN с номером X отвечают ACK = X + 1.</p>
+      <p>Сам ACK места не занимает: данные в пятой строке уходят с тем же номером, что подтверждение в четвёртой. Иначе, как сказано в RFC, пришлось бы подтверждать подтверждения.</p>
+      <div class="field">
+        <label for="data">Первые данные, их можно поменять</label>
+        <input id="data" type="text" value="теперь собери группу" autocomplete="off" spellcheck="false">
+        <output id="dataLen" for="data"></output>
+      </div>
+      <p class="small">Номера считают байты, а не буквы: буква кириллицы в UTF-8 занимает два байта.</p>
+      <p class="small">Флагов в байте восемь. В апреле 2026 года RFC 9768 отдал девятому флагу, AE, бит из соседнего байта.</p>
+    </div>
+    <figure><pre class="fig" id="fig"></pre><figcaption>RFC 9293, рисунок 6, с номерами этой страницы. A — клиент, B — сервер. Шестой строки в RFC нет: это ответ сервера на данные.</figcaption></figure>
+  </div>
+</section>
+
+<section class="part" id="nomer" aria-labelledby="h-nomer">
+  <h2 id="h-nomer">номер наугад</h2>
+  <div class="cols flip">
+    <figure class="pic"><img src="img/vallotton-poker-1896-copy3.jpg" alt="Ксерокопия гравюры: руки игроков, подсвечник и край карточного стола на чёрном" width="1480" height="1081"><figcaption>Феликс Валлоттон. Покер, деталь. 1896. Гравюра на дереве, Cleveland Museum of Art, CC0. Копия с копии с копии.</figcaption></figure>
+    <div class="text">
+      <p>Счёт начинается не с нуля. Каждая сторона берёт начальный номер, ISN, из 32 бит: от 0 до 4294967295. Дальше номера идут по кругу, по модулю 2³²: за 4294967295 снова идёт 0.</p>
+      <p>RFC 9293 советует считать так: ISN = M + F(адреса, порты, секретный ключ). M — счётчик, который тикает примерно раз в 4 микросекунды и обходит круг примерно за 4,55 часа. F — псевдослучайная функция с ключом, снаружи её не посчитать.</p>
+      <p>Ключ нужен из-за атаки, которую в 1985 году описал Моррис из Bell Labs. Ядра BSD прибавляли к счётчику постоянную раз в секунду и ещё одну на каждое соединение. Открыл одно соединение и знаешь номер следующего, а с ним можно вслепую подделать соединение от чужого адреса.</p>
+      <dl class="calc" id="isnCalc"></dl>
+      <div class="btns"><button type="button" id="again2">новое соединение</button><button type="button" id="edge" aria-pressed="false">номер на краю круга</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="flud" aria-labelledby="h-flud">
+  <h2 id="h-flud">третий не пришёл</h2>
+  <div class="cols">
+    <div class="text">
+      <p>Ответив SYN-ACK, сервер ждёт третий аккорд в состоянии SYN-RECEIVED и держит под это соединение память. Очередь полуоткрытых соединений у порта короткая: по RFC 4987, обычно от полудюжины до нескольких десятков мест.</p>
+      <p>SYN-флуд — шквал SYN с поддельных адресов, откуда никто не ответит. Очередь забита, настоящих клиентов не пускают. Слабость нашли Чесвик и Белловин в 1994 году, в 1996-м журнал Phrack напечатал описание и программу, а 6 сентября 1996 года флуд положил почту нью-йоркского провайдера Panix.</p>
+      <p>Через десять дней Дэн Бернштейн предложил SYN cookies, детали он доработал с Эриком Шенком. Сервер ничего не запоминает и прячет нужное в свой начальный номер. Разность его номера и номера клиента — это 5 бит счётчика времени с шагом 64 секунды, 3 бита кода MSS и 24 бита секретной функции от адресов, портов и времени. Настоящий клиент вернёт номер плюс один в третьем аккорде, и сервер по нему восстановит соединение.</p>
+      <div class="btns"><button type="button" id="cookies" aria-pressed="false">включить SYN cookies</button></div>
+      <dl class="calc" id="cookieCalc"></dl>
+      <p class="verdict" id="verdict" aria-live="polite"></p>
+    </div>
+    <figure class="pic"><img src="img/vallotton-manifestation-1893-copy3.jpg" alt="Ксерокопия гравюры: толпа в чёрном бежит по улице" width="1578" height="1018"><figcaption>Феликс Валлоттон. Манифестация. 1893. Гравюра на дереве, Cleveland Museum of Art, CC0. Копия с копии с копии.</figcaption></figure>
+  </div>
+</section>
+
+<section class="part" id="proverka" aria-labelledby="h-proverka">
+  <h2 id="h-proverka">проверь сам</h2>
+  <div class="cols">
+    <div class="text">
+      <p>Рукопожатие видно в tcpdump. Флаги он пишет буквами: [S] — SYN, [S.] — SYN и ACK, [.] — один ACK. Ключ -S печатает настоящие номера, без него третий аккорд выглядит как ack 1.</p>
+      <p class="small">Три команды, каждая в своём окне, по порядку. На macOS интерфейс называется lo0.</p>
+    </div>
+    <div class="code">
+      <pre>python3 -m http.server 8765 --bind 127.0.0.1
+sudo tcpdump -i lo -n -S -c 3 'tcp port 8765'
+curl -s -o /dev/null http://127.0.0.1:8765/</pre>
+      <pre>02:34:54.039040 IP 127.0.0.1.60028 &gt; 127.0.0.1.8765: Flags [S], seq 3597403452, win 65495, options [mss 65495,sackOK,TS val 2583860699 ecr 0,nop,wscale 10], length 0
+02:34:54.039052 IP 127.0.0.1.8765 &gt; 127.0.0.1.60028: Flags [S.], seq 3046624625, ack 3597403453, win 65483, options [mss 65495,sackOK,TS val 2537591153 ecr 2583860699,nop,wscale 10], length 0
+02:34:54.039061 IP 127.0.0.1.60028 &gt; 127.0.0.1.8765: Flags [.], ack 3046624626, win 64, options [nop,nop,TS val 2583860699 ecr 2537591153], length 0</pre>
+      <p class="small">Снято 30 октября 2026 года на Linux, tcpdump 4.99.4. Следующее соединение через четыре секунды начало с номера 812720183: номера двух соединений подряд ничем не связаны.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="colophon">
+  <div>
+    <h2>Протокол</h2>
+    <p>RFC 9293 «Transmission Control Protocol», STD 7, август 2022, редактор W. Eddy. Заменил RFC 793 от сентября 1981 года.</p>
+    <p>SYN-флуд — RFC 4987, 2007. SYN cookies — страница Д. Дж. Бернштейна cr.yp.to/syncookies.html.</p>
+  </div>
+  <div>
+    <h2>Эта страница</h2>
+    <p>Номера считает твой браузер. ISN = M + F: M — счётчик с шагом 4 микросекунды, F — первые 32 бита SHA-256 от адресов, портов и случайного ключа этой вкладки.</p>
+    <p>Адреса взяты из диапазонов для документации, RFC 5737. В сеть ничего не уходит.</p>
+  </div>
+  <div>
+    <h2>Зин</h2>
+    <p>Рисунок с тремя аккордами Тони Мун сделал для первого номера Sideburns, январь 1977, чтобы заполнить пустую страницу. Его часто приписывают Sniffin' Glue, но Марк Перри от него отказывался.</p>
+  </div>
+  <div>
+    <h2>Изображения</h2>
+    <p>Тут Джексон и Джек Джонсон, 1922, фото W. E. Palmer. Library of Congress, без известных ограничений.</p>
+    <p>Феликс Валлоттон, «Покер», 1896, и «Манифестация», 1893. Cleveland Museum of Art, CC0.</p>
+    <p>Все три прошли через ксерокс трижды: копия с копии с копии.</p>
+  </div>
+</footer>
+</div>
+
+<script>
+// SHA-256 (FIPS 180-4), synchronous, so the page also works opened from disk.
+function sha256(msg) {
+  const K = [0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+    0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+    0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+    0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+    0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+    0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+    0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2];
+  const H = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19];
+  const len = msg.length, total = ((len + 9 + 63) >> 6) << 6;
+  const m = new Uint8Array(total);
+  m.set(msg);
+  m[len] = 0x80;
+  const bits = len * 8;
+  m[total - 5] = Math.floor(bits / 0x100000000) & 255;
+  m[total - 4] = (bits >>> 24) & 255; m[total - 3] = (bits >>> 16) & 255;
+  m[total - 2] = (bits >>> 8) & 255; m[total - 1] = bits & 255;
+  const w = new Int32Array(64);
+  const rotr = (x, n) => (x >>> n) | (x << (32 - n));
+  for (let off = 0; off < total; off += 64) {
+    for (let i = 0; i < 16; i++) {
+      w[i] = (m[off + 4 * i] << 24) | (m[off + 4 * i + 1] << 16) | (m[off + 4 * i + 2] << 8) | m[off + 4 * i + 3];
+    }
+    for (let i = 16; i < 64; i++) {
+      const s0 = rotr(w[i - 15], 7) ^ rotr(w[i - 15], 18) ^ (w[i - 15] >>> 3);
+      const s1 = rotr(w[i - 2], 17) ^ rotr(w[i - 2], 19) ^ (w[i - 2] >>> 10);
+      w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
+    }
+    let a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
+    for (let i = 0; i < 64; i++) {
+      const t1 = (h + (rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25)) + ((e & f) ^ (~e & g)) + K[i] + w[i]) | 0;
+      const t2 = ((rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22)) + ((a & b) ^ (a & c) ^ (b & c))) | 0;
+      h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
+    }
+    H[0] = (H[0] + a) | 0; H[1] = (H[1] + b) | 0; H[2] = (H[2] + c) | 0; H[3] = (H[3] + d) | 0;
+    H[4] = (H[4] + e) | 0; H[5] = (H[5] + f) | 0; H[6] = (H[6] + g) | 0; H[7] = (H[7] + h) | 0;
+  }
+  const out = new Uint8Array(32);
+  H.forEach((v, i) => {
+    out[4 * i] = (v >>> 24) & 255; out[4 * i + 1] = (v >>> 16) & 255;
+    out[4 * i + 2] = (v >>> 8) & 255; out[4 * i + 3] = v & 255;
+  });
+  return out;
+}
+if (typeof module !== 'undefined') module.exports = sha256;
+
+// TCP handshake model. Every number is a 32-bit sequence number, all arithmetic is modulo 2^32 (RFC 9293, 3.4).
+const TCP = (function () {
+  const U32 = 4294967296;
+  const mod32 = x => ((x % U32) + U32) % U32;
+  const enc = new TextEncoder();
+  const be32 = (h, i) => h[i] * 16777216 + (h[i + 1] << 16) + (h[i + 2] << 8) + h[i + 3];
+
+  function digest(parts, key) {
+    const p = enc.encode(parts.join('|') + '|');
+    const buf = new Uint8Array(p.length + key.length);
+    buf.set(p);
+    buf.set(key, p.length);
+    return sha256(buf);
+  }
+
+  // RFC 9293, 3.4.1: ISN = M + F(localip, localport, remoteip, remoteport, secretkey),
+  // M is the 4 microsecond timer, F a pseudorandom function; here F is the first 32 bits of SHA-256.
+  function isn(M, local, remote, key) {
+    const F = be32(digest([local.ip, local.port, remote.ip, remote.port], key), 0);
+    return { M, F, sum: M + F, isn: mod32(M + F) };
+  }
+
+  // SYN cookie as described by D. J. Bernstein (cr.yp.to/syncookies.html): the difference between the
+  // server's ISN and the client's ISN is (t mod 32) in the top 5 bits, an MSS code in the next 3 bits and a
+  // 24-bit secret function of the addresses, ports and t. t grows by one every 64 seconds.
+  // The eight MSS values are this page's own choice: the server picks the table.
+  const MSS = [536, 1024, 1220, 1300, 1360, 1400, 1440, 1460];
+  const mssCode = clientMss => MSS.reduce((k, v, i) => (v <= clientMss ? i : k), 0);
+  function s24(client, server, t, key) {
+    const h = digest([client.ip, client.port, server.ip, server.port, t], key);
+    return (h[0] << 16) | (h[1] << 8) | h[2];
+  }
+  function cookie(clientIsn, client, server, t, clientMss, key) {
+    const m = mssCode(clientMss), s = s24(client, server, t, key);
+    const c = (t % 32) * 134217728 + m * 16777216 + s;
+    return { t, t5: t % 32, m, mss: MSS[m], s, cookie: c, serverIsn: mod32(clientIsn + c) };
+  }
+  // The server keeps nothing; on the third chord it rebuilds the cookie from the ACK's own numbers:
+  // ack - seq = (server ISN + 1) - (client ISN + 1).
+  function check(ackNo, seqNo, client, server, tNow, key) {
+    const c = mod32(ackNo - seqNo);
+    const t5 = Math.floor(c / 134217728), m = Math.floor(c / 16777216) % 8, s = c % 16777216;
+    for (let t = tNow; t >= tNow - 3; t--) {
+      if (t % 32 === t5 && s24(client, server, t, key) === s) return { ok: true, cookie: c, t, t5, m, mss: MSS[m], s };
+    }
+    return { ok: false, cookie: c, t5, m, s };
+  }
+
+  // RFC 9293, figure 6, plus the server's acknowledgment of the first data.
+  // A SYN takes one sequence number, an ACK takes none, data take one number per byte.
+  function handshake(a, b, len) {
+    const a1 = mod32(a + 1), b1 = mod32(b + 1);
+    return {
+      syn: { seq: a },
+      synack: { seq: b, ack: a1 },
+      ack: { seq: a1, ack: b1 },
+      data: { seq: a1, ack: b1, len },
+      dataAck: { seq: b1, ack: mod32(a1 + len) }
+    };
+  }
+
+  return { U32, mod32, isn, cookie, check, handshake, MSS };
+})();
+if (typeof module !== 'undefined') module.exports = TCP;
+
+(function () {
+  const $ = id => document.getElementById(id);
+  const rnd = n => crypto.getRandomValues(new Uint8Array(n));
+  // Documentation addresses (RFC 5737); the client port comes from the dynamic range 49152-65535 (RFC 6335).
+  const CLIENT = { ip: '192.0.2.7', port: 0 };
+  const SERVER = { ip: '198.51.100.80', port: 443 };
+  const keyA = rnd(16), keyB = rnd(16), keyCookie = rnd(16);
+  const enc = new TextEncoder();
+  const narrow = window.matchMedia('(max-width: 640px)');
+  const st = { edge: false, cookies: false, M: 0, tSec: 0 };
+  // M: a 32-bit counter that ticks every 4 microseconds (250 ticks per millisecond).
+  const ticks = () => Math.floor((performance.timeOrigin + performance.now()) * 250) % TCP.U32;
+  const bin = (v, n) => v.toString(2).padStart(n, '0');
+  const hex = (v, n) => '0x' + v.toString(16).toUpperCase().padStart(n, '0');
+  const plural = (n, one, few, many) => {
+    const a = n % 10, b = n % 100;
+    if (a === 1 && b !== 11) return one;
+    if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return few;
+    return many;
+  };
+
+  function connect() {
+    CLIENT.port = 49152 + (crypto.getRandomValues(new Uint16Array(1))[0] % 16384);
+    st.M = ticks();
+    st.tSec = Math.floor(Date.now() / 1000);
+    render();
+  }
+
+  const seg = (id, parts) => {
+    $(id).innerHTML = parts.map(([k, v]) => '<span>&lt;' + k + '=' + v + '&gt;</span>').join('<wbr>');
+  };
+
+  // RFC 9293, figure 6, set out the same way, with this page's numbers.
+  function figure(h) {
+    const S = {
+      2: `<SEQ=${h.syn.seq}><CTL=SYN>`,
+      3: `<SEQ=${h.synack.seq}><ACK=${h.synack.ack}><CTL=SYN,ACK>`,
+      4: `<SEQ=${h.ack.seq}><ACK=${h.ack.ack}><CTL=ACK>`,
+      5: `<SEQ=${h.data.seq}><ACK=${h.data.ack}><CTL=ACK><DATA>`,
+      6: `<SEQ=${h.dataAck.seq}><ACK=${h.dataAck.ack}><CTL=ACK>`
+    };
+    const rows = [
+      [2, 'SYN-SENT', '-->', 'SYN-RECEIVED'],
+      [3, 'ESTABLISHED', '<--', 'SYN-RECEIVED'],
+      [4, 'ESTABLISHED', '-->', 'ESTABLISHED'],
+      [5, 'ESTABLISHED', '-->', 'ESTABLISHED'],
+      [6, 'ESTABLISHED', '<--', 'ESTABLISHED']
+    ];
+    if (narrow.matches) {
+      const out = ['    A                B', '1.  CLOSED           LISTEN'];
+      rows.forEach(([n, a, arrow, b]) => out.push('', `${n}.  ${a.padEnd(12)} ${arrow} ${b}`, `    ${S[n]}`));
+      return out.join('\n');
+    }
+    const L = Math.max(...Object.values(S).map(s => s.length));
+    const colB = 4 + 11 + 1 + 3 + 1 + L + 1 + 3 + 1;
+    const out = ['    TCP Peer A'.padEnd(colB) + 'TCP Peer B', '', '1.  CLOSED'.padEnd(colB) + 'LISTEN'];
+    rows.forEach(([n, a, arrow, b]) => out.push('', `${n}.  ${a.padEnd(11)} ${arrow} ${S[n].padEnd(L)} ${arrow} ${b}`));
+    return out.join('\n');
+  }
+
+  function calc(id, rows) {
+    $(id).innerHTML = rows.map(([label, value, cls]) =>
+      `<dt class="${cls || ''}">${label}</dt><dd class="${cls || ''}">${value}</dd>`).join('');
+  }
+
+  function render() {
+    const a = TCP.isn(st.M, CLIENT, SERVER, keyA);
+    const aIsn = st.edge ? TCP.U32 - 1 : a.isn;
+    let bIsn, ck = null;
+    if (st.cookies) {
+      ck = TCP.cookie(aIsn, CLIENT, SERVER, Math.floor(st.tSec / 64), 1460, keyCookie);
+      bIsn = ck.serverIsn;
+    } else {
+      bIsn = TCP.isn(TCP.mod32(st.M + 30), SERVER, CLIENT, keyB).isn;
+    }
+    const text = $('data').value;
+    const len = enc.encode(text).length;
+    const h = TCP.handshake(aIsn, bIsn, len);
+
+    seg('seg1', [['SEQ', h.syn.seq], ['CTL', 'SYN']]);
+    seg('seg2', [['SEQ', h.synack.seq], ['ACK', h.synack.ack], ['CTL', 'SYN,ACK']]);
+    seg('seg3', [['SEQ', h.ack.seq], ['ACK', h.ack.ack], ['CTL', 'ACK']]);
+    $('conn').textContent = `${CLIENT.ip}:${CLIENT.port} → ${SERVER.ip}:${SERVER.port}`;
+    $('fig').textContent = figure(h);
+    const chars = [...text].length;
+    $('dataLen').textContent = `${chars} ${plural(chars, 'знак', 'знака', 'знаков')}, ${len} ${plural(len, 'байт', 'байта', 'байт')}: сервер подтвердит ${h.data.seq} + ${len} = ${h.dataAck.ack}`;
+
+    if (st.edge) {
+      calc('isnCalc', [
+        ['ISN клиента, выставлен на край круга', aIsn, 'em'],
+        ['ISN + 1', aIsn + 1],
+        ['ACK от сервера = (ISN + 1) mod 2³²', h.synack.ack, 'em line']
+      ]);
+    } else {
+      const rows = [
+        ['M — счётчик с шагом 4 мкс', a.M],
+        ['F — SHA-256 от адресов, портов и ключа, 32 бита', a.F],
+        ['M + F', a.sum, 'line']
+      ];
+      if (a.sum >= TCP.U32) rows.push(['больше 2³²: вычитаем 4294967296', a.sum - TCP.U32]);
+      rows.push(['ISN клиента', aIsn, 'em'], ['ACK от сервера = ISN + 1', h.synack.ack]);
+      calc('isnCalc', rows);
+    }
+
+    if (ck) {
+      const chk = TCP.check(h.ack.ack, h.ack.seq, CLIENT, SERVER, ck.t, keyCookie);
+      calc('cookieCalc', [
+        ['t = секунды Unix / 64', ck.t],
+        ['t mod 32, 5 бит', `${ck.t5} · ${bin(ck.t5, 5)}`],
+        [`код MSS ${ck.mss}, 3 бита`, `${ck.m} · ${bin(ck.m, 3)}`],
+        ['s = SHA-256 от адресов, портов, t и ключа, 24 бита', hex(ck.s, 6)],
+        ['cookie = ISN сервера − ISN клиента', ck.cookie, 'line'],
+        ['ISN сервера', bIsn, 'em'],
+        ['третий аккорд: ack − seq', chk.cookie, 'line']
+      ]);
+      $('verdict').textContent = chk.ok
+        ? `Сходится: t, MSS ${chk.mss} и s совпали. Сервер восстановил соединение, ничего не запомнив.`
+        : 'Не сходится: такой cookie сервер не выдавал, соединение отклонено.';
+    } else {
+      calc('cookieCalc', [['ISN сервера = M + F с ключом сервера', bIsn, 'em']]);
+      $('verdict').textContent = 'SYN cookies выключены: полуоткрытое соединение лежит в очереди сервера, пока не придёт третий аккорд.';
+    }
+  }
+
+  $('again').addEventListener('click', connect);
+  $('again2').addEventListener('click', connect);
+  $('edge').addEventListener('click', e => {
+    st.edge = !st.edge;
+    e.currentTarget.setAttribute('aria-pressed', String(st.edge));
+    e.currentTarget.textContent = st.edge ? 'вернуть номер по формуле' : 'номер на краю круга';
+    render();
+  });
+  $('cookies').addEventListener('click', e => {
+    st.cookies = !st.cookies;
+    st.tSec = Math.floor(Date.now() / 1000);
+    e.currentTarget.setAttribute('aria-pressed', String(st.cookies));
+    e.currentTarget.textContent = st.cookies ? 'выключить SYN cookies' : 'включить SYN cookies';
+    render();
+  });
+  $('data').addEventListener('input', render);
+  if (narrow.addEventListener) narrow.addEventListener('change', render);
+  connect();
+})();
+</script>
+</body>
+</html>
