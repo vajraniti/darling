@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Альбом HTTP</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&display=swap">
+<style>
+/* Layout: a 1977 punk-zine sleeve on white paper, after Slash #1 and Whole Lotta Red: the front is a black block with a red mark over its top edge, a folio line and a spine line; the back is the tracklist set as a cross, after the MUSIC sleeve (2025), with the insert beside it. One narrow grotesque; the only drawn thing is the mark, cut from 1912 metal type. A deliberate single light look, like printed paper. */
+:root {
+  --paper: #ffffff;
+  --ink: #000000;
+  --red: #d60f10;
+  --grey: #717171;
+  --f: "PT Sans Narrow", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { background: var(--paper); }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f);
+  font-size: 18px;
+  line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+p, h1, h2, h3, figure, blockquote { margin: 0; }
+a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--red); }
+:focus-visible { outline: 1px solid var(--ink); outline-offset: 3px; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.page { max-width: 1240px; margin: 0 auto; }
+.label { font-weight: 700; font-size: 14px; line-height: 1.2; text-transform: uppercase; letter-spacing: .05em; }
+
+.top { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; padding-block: 18px 0; }
+.top .logo img { display: block; height: 26px; width: auto; }
+.top nav { display: flex; gap: 22px; flex-wrap: wrap; }
+.top nav a { text-decoration: none; }
+
+.front { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 64px; align-items: end; padding-block: 18px 128px; }
+.sleeve { container-type: inline-size; width: min(540px, calc((100vh - 170px) * .74)); max-width: 100%; }
+.block { position: relative; margin: calc(.13 * (100cqw - 22px)) 22px 0 0; }
+.block .photo { display: block; width: 100%; height: auto; }
+.block h1 { position: absolute; left: 7%; top: calc(-.13 * (100cqw - 22px)); width: 76%; }
+.block h1 img { display: block; width: 100%; height: auto; }
+.spine { position: absolute; top: 0; left: calc(100% + 8px); writing-mode: vertical-rl; font-size: 12px; line-height: 1; letter-spacing: .03em; white-space: nowrap; }
+.folio { display: flex; justify-content: space-between; gap: 12px; margin: 10px 22px 0 0; font-size: 12px; line-height: 1.2; text-transform: uppercase; letter-spacing: .07em; }
+.liner { display: flex; flex-direction: column; gap: 18px; max-width: 31em; padding-bottom: 30px; min-width: 0; }
+.lead { font-size: 23px; line-height: 1.32; text-wrap: pretty; }
+.small { font-size: 15px; line-height: 1.45; color: var(--grey); }
+
+.back { padding-block: 0 128px; scroll-margin-top: 16px; }
+.spread { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 64px; align-items: start; }
+.cross { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; column-gap: 20px; }
+.arm-r { justify-self: end; }
+.sides { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 18px; text-align: center; font-size: 14px; line-height: 1.3; }
+.sides h3 { font-size: 14px; line-height: 1.3; letter-spacing: .05em; }
+.tracks { list-style: none; margin: 0; padding: 0; }
+.tracks button { font: 700 14px/1.3 var(--f); text-transform: uppercase; letter-spacing: .03em; color: var(--ink); background: none; border: 0; padding: 1px 6px; cursor: pointer; }
+.tracks button:hover { text-decoration: underline; text-underline-offset: 3px; }
+.tracks button[aria-pressed="true"] { color: var(--red); }
+.tracks .n { font-variant-numeric: tabular-nums; }
+
+.insert { position: sticky; top: 16px; display: flex; flex-direction: column; gap: 14px; min-width: 0; scroll-margin-top: 16px; }
+#ins { display: flex; flex-direction: column; gap: 14px; }
+.where { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: .05em; }
+.code { font-weight: 700; font-size: clamp(112px, 13vw, 184px); line-height: .8; color: var(--red); font-variant-numeric: tabular-nums; }
+.phrase { font-weight: 700; font-size: 30px; line-height: 1.05; text-transform: uppercase; letter-spacing: .02em; text-wrap: balance; }
+.phrase .ru { display: block; margin-top: 6px; font-weight: 400; font-size: 22px; text-transform: none; letter-spacing: 0; color: var(--grey); }
+.cls { font-size: 16px; }
+.mean { font-size: 20px; line-height: 1.4; }
+.orig { font-size: 15px; line-height: 1.45; color: var(--grey); }
+.meta { font-size: 14px; color: var(--grey); }
+.meta a { color: var(--grey); }
+.teapot img { display: block; width: min(100%, 360px); height: auto; }
+.teapot figcaption { margin-top: 8px; font-size: 14px; color: var(--grey); max-width: 30em; }
+.any { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; padding-top: 12px; border-top: 1px solid var(--ink); }
+.any input { font: 700 26px/1 var(--f); width: 3.4ch; padding: 2px 0; border: 0; border-bottom: 1px solid var(--ink); border-radius: 0; background: transparent; color: var(--ink); font-variant-numeric: tabular-nums; }
+.any .small { font-size: 14px; }
+
+.colophon { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; padding-block: 28px 80px; border-top: 1px solid var(--ink); font-size: 15px; color: var(--grey); }
+.colophon h2 { margin-bottom: 8px; color: var(--ink); }
+.colophon p + p { margin-top: 8px; }
+.colophon a { color: var(--grey); }
+
+@media (max-width: 980px) {
+  .front, .spread { grid-template-columns: minmax(0, 1fr); gap: 44px; }
+  .front { padding-block: 14px 88px; }
+  .back { padding-block: 0 88px; }
+  .insert { position: static; }
+  .colophon { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .sleeve { width: 100%; }
+  .cross { column-gap: 8px; }
+  .tracks button { font-size: 13px; padding-inline: 3px; }
+  .arm { font-size: 13px; }
+  .lead { font-size: 21px; }
+  .phrase { font-size: 26px; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+</head>
+<body>
+<div class="page">
+<header class="top">
+  <a class="logo" href="#top" aria-label="http, к обложке"><img src="img/mark-black.png" alt="http" width="502" height="315"></a>
+  <nav class="label" aria-label="Разделы"><a href="#licevaya">лицевая</a><a href="#oborot">оборот</a><a href="#vkladysh">вкладыш</a></nav>
+</header>
+
+<main id="top">
+<section class="front" id="licevaya" aria-label="Лицевая сторона">
+  <div class="sleeve">
+    <div class="block">
+      <img class="photo" src="img/cover-mourner-1404.png" alt="Фигура в капюшоне: белые складки на чёрном, лица не видно" width="960" height="1200">
+      <h1><img src="img/mark-red.png" alt="http" width="502" height="315"></h1>
+      <p class="spine">http semantics</p>
+    </div>
+    <p class="folio"><span>STD 97 · RFC 9110</span><span>июнь 2022</span><span>IETF</span></p>
+  </div>
+  <div class="liner">
+    <p class="lead">HTTP — протокол, на котором держится веб. На каждый запрос сервер отвечает трёхзначным кодом. RFC 9110 определяет сорок шесть таких кодов: первая цифра задаёт класс ответа, а две последние, как сказано в стандарте, классификации не несут. Здесь это пластинка. Первая цифра — сторона, две последние — номер трека.</p>
+    <p class="small">Фразы вроде Not Found стандарт называет только рекомендацией: их можно заменить своими или опустить, протоколу всё равно. Поэтому рядом с каждой стоит перевод.</p>
+    <p class="small">На обложке плакальщик с надгробия Филиппа Смелого, герцога Бургундского. Клаус де Верве, 1404–1410, алебастр. Кливлендский музей искусств.</p>
+  </div>
+</section>
+
+<section class="back" id="oborot" aria-labelledby="h-oborot">
+  <h2 class="vh" id="h-oborot">Оборот: сорок шесть кодов RFC 9110</h2>
+  <div class="spread">
+    <div class="cross">
+      <p class="arm label">IETF</p>
+      <ol class="sides" id="sides">
+<li><h3>1XX</h3><ol class="tracks"><li><button type="button" data-c="100" aria-pressed="false"><span class="vh">1</span><span class="n">00</span> CONTINUE</button></li><li><button type="button" data-c="101" aria-pressed="false"><span class="vh">1</span><span class="n">01</span> SWITCHING PROTOCOLS</button></li></ol></li>
+<li><h3>2XX</h3><ol class="tracks"><li><button type="button" data-c="200" aria-pressed="false"><span class="vh">2</span><span class="n">00</span> OK</button></li><li><button type="button" data-c="201" aria-pressed="false"><span class="vh">2</span><span class="n">01</span> CREATED</button></li><li><button type="button" data-c="202" aria-pressed="false"><span class="vh">2</span><span class="n">02</span> ACCEPTED</button></li><li><button type="button" data-c="203" aria-pressed="false"><span class="vh">2</span><span class="n">03</span> NON-AUTHORITATIVE INFORMATION</button></li><li><button type="button" data-c="204" aria-pressed="false"><span class="vh">2</span><span class="n">04</span> NO CONTENT</button></li><li><button type="button" data-c="205" aria-pressed="false"><span class="vh">2</span><span class="n">05</span> RESET CONTENT</button></li><li><button type="button" data-c="206" aria-pressed="false"><span class="vh">2</span><span class="n">06</span> PARTIAL CONTENT</button></li></ol></li>
+<li><h3>3XX</h3><ol class="tracks"><li><button type="button" data-c="300" aria-pressed="false"><span class="vh">3</span><span class="n">00</span> MULTIPLE CHOICES</button></li><li><button type="button" data-c="301" aria-pressed="false"><span class="vh">3</span><span class="n">01</span> MOVED PERMANENTLY</button></li><li><button type="button" data-c="302" aria-pressed="false"><span class="vh">3</span><span class="n">02</span> FOUND</button></li><li><button type="button" data-c="303" aria-pressed="false"><span class="vh">3</span><span class="n">03</span> SEE OTHER</button></li><li><button type="button" data-c="304" aria-pressed="false"><span class="vh">3</span><span class="n">04</span> NOT MODIFIED</button></li><li><button type="button" data-c="305" aria-pressed="false"><span class="vh">3</span><span class="n">05</span> USE PROXY</button></li><li><button type="button" data-c="306" aria-pressed="false"><span class="vh">3</span><span class="n">06</span> (UNUSED)</button></li><li><button type="button" data-c="307" aria-pressed="false"><span class="vh">3</span><span class="n">07</span> TEMPORARY REDIRECT</button></li><li><button type="button" data-c="308" aria-pressed="false"><span class="vh">3</span><span class="n">08</span> PERMANENT REDIRECT</button></li></ol></li>
+<li><h3>4XX</h3><ol class="tracks"><li><button type="button" data-c="400" aria-pressed="false"><span class="vh">4</span><span class="n">00</span> BAD REQUEST</button></li><li><button type="button" data-c="401" aria-pressed="false"><span class="vh">4</span><span class="n">01</span> UNAUTHORIZED</button></li><li><button type="button" data-c="402" aria-pressed="false"><span class="vh">4</span><span class="n">02</span> PAYMENT REQUIRED</button></li><li><button type="button" data-c="403" aria-pressed="false"><span class="vh">4</span><span class="n">03</span> FORBIDDEN</button></li><li><button type="button" data-c="404" aria-pressed="true"><span class="vh">4</span><span class="n">04</span> NOT FOUND</button></li><li><button type="button" data-c="405" aria-pressed="false"><span class="vh">4</span><span class="n">05</span> METHOD NOT ALLOWED</button></li><li><button type="button" data-c="406" aria-pressed="false"><span class="vh">4</span><span class="n">06</span> NOT ACCEPTABLE</button></li><li><button type="button" data-c="407" aria-pressed="false"><span class="vh">4</span><span class="n">07</span> PROXY AUTHENTICATION REQUIRED</button></li><li><button type="button" data-c="408" aria-pressed="false"><span class="vh">4</span><span class="n">08</span> REQUEST TIMEOUT</button></li><li><button type="button" data-c="409" aria-pressed="false"><span class="vh">4</span><span class="n">09</span> CONFLICT</button></li><li><button type="button" data-c="410" aria-pressed="false"><span class="vh">4</span><span class="n">10</span> GONE</button></li><li><button type="button" data-c="411" aria-pressed="false"><span class="vh">4</span><span class="n">11</span> LENGTH REQUIRED</button></li><li><button type="button" data-c="412" aria-pressed="false"><span class="vh">4</span><span class="n">12</span> PRECONDITION FAILED</button></li><li><button type="button" data-c="413" aria-pressed="false"><span class="vh">4</span><span class="n">13</span> CONTENT TOO LARGE</button></li><li><button type="button" data-c="414" aria-pressed="false"><span class="vh">4</span><span class="n">14</span> URI TOO LONG</button></li><li><button type="button" data-c="415" aria-pressed="false"><span class="vh">4</span><span class="n">15</span> UNSUPPORTED MEDIA TYPE</button></li><li><button type="button" data-c="416" aria-pressed="false"><span class="vh">4</span><span class="n">16</span> RANGE NOT SATISFIABLE</button></li><li><button type="button" data-c="417" aria-pressed="false"><span class="vh">4</span><span class="n">17</span> EXPECTATION FAILED</button></li><li><button type="button" data-c="418" aria-pressed="false"><span class="vh">4</span><span class="n">18</span> (UNUSED)</button></li><li><button type="button" data-c="421" aria-pressed="false"><span class="vh">4</span><span class="n">21</span> MISDIRECTED REQUEST</button></li><li><button type="button" data-c="422" aria-pressed="false"><span class="vh">4</span><span class="n">22</span> UNPROCESSABLE CONTENT</button></li><li><button type="button" data-c="426" aria-pressed="false"><span class="vh">4</span><span class="n">26</span> UPGRADE REQUIRED</button></li></ol></li>
+<li><h3>5XX</h3><ol class="tracks"><li><button type="button" data-c="500" aria-pressed="false"><span class="vh">5</span><span class="n">00</span> INTERNAL SERVER ERROR</button></li><li><button type="button" data-c="501" aria-pressed="false"><span class="vh">5</span><span class="n">01</span> NOT IMPLEMENTED</button></li><li><button type="button" data-c="502" aria-pressed="false"><span class="vh">5</span><span class="n">02</span> BAD GATEWAY</button></li><li><button type="button" data-c="503" aria-pressed="false"><span class="vh">5</span><span class="n">03</span> SERVICE UNAVAILABLE</button></li><li><button type="button" data-c="504" aria-pressed="false"><span class="vh">5</span><span class="n">04</span> GATEWAY TIMEOUT</button></li><li><button type="button" data-c="505" aria-pressed="false"><span class="vh">5</span><span class="n">05</span> HTTP VERSION NOT SUPPORTED</button></li></ol></li>
+      </ol>
+      <p class="arm arm-r label">HTTP</p>
+    </div>
+    <aside class="insert" id="vkladysh" aria-label="Вкладыш">
+      <div id="ins" aria-live="polite">
+<p class="where">Сторона 4 · трек 04</p>
+<p class="code">404</p>
+<h2 class="phrase">Not Found<span class="ru">не найдено</span></h2>
+<p class="cls">4xx · ошибка клиента. В запросе ошибка, или его нельзя выполнить.</p>
+<p class="mean">Исходный сервер не нашёл текущего представления ресурса или не хочет признавать, что оно есть. Временно это или навсегда, код не говорит.</p>
+<blockquote class="orig" lang="en">The 404 (Not Found) status code indicates that the origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</blockquote>
+<p class="meta"><a href="https://www.rfc-editor.org/rfc/rfc9110#section-15.5.5" target="_blank" rel="noopener">RFC 9110, § 15.5.5</a> · кэшируется эвристически</p>
+      </div>
+      <form class="any" id="any" autocomplete="off">
+        <label class="label" for="anyc">Любой код</label>
+        <input id="anyc" name="anyc" type="text" inputmode="numeric" maxlength="3" value="404" spellcheck="false">
+        <span class="small">три цифры, даже тех, что нет в трек-листе</span>
+      </form>
+    </aside>
+  </div>
+</section>
+</main>
+
+<footer class="colophon">
+  <div>
+    <h2 class="label">Стандарт</h2>
+    <p>RFC 9110 «HTTP Semantics», IETF, июнь 2022, STD 97. Редакторы: Рой Филдинг, Марк Ноттингем, Юлиан Решке.</p>
+    <p>Код 418 пришёл из первоапрельского RFC 2324 Ларри Мазинтера, 1998 год. Смысл кодов пересказан по RFC 9110, цитаты дословные.</p>
+  </div>
+  <div>
+    <h2 class="label">Обложка</h2>
+    <p>Схема взята у первого номера лос-анджелесского зина Slash (май 1977, фото Мелани Ниссен) и у его оммажа, обложки Whole Lotta Red (25 декабря 2020, дизайн Art Dealer). Оборот набран крестом, как трек-лист пластинки MUSIC (2025).</p>
+    <p>Знак http собран из оттисков металлического шрифта Cloister Black в каталоге American Type Founders 1912 года.</p>
+  </div>
+  <div>
+    <h2 class="label">Изображения</h2>
+    <p>Плакальщик Клауса де Верве: The Cleveland Museum of Art, CC0.</p>
+    <p>Чайник Пола Ревира: The Metropolitan Museum of Art, CC0.</p>
+    <p>Каталог шрифтов: Internet Archive, общественное достояние.</p>
+  </div>
+</footer>
+</div>
+
+<script>
+(function () {
+  // 46 status codes of RFC 9110, section 15: English phrase and quote verbatim, Russian is ours.
+  const DATA = [{"c": 100, "en": "Continue", "ru": "продолжай", "m": "Начало запроса получено, и сервер его пока не отклонил. Окончательный ответ он пришлёт, когда получит запрос целиком и выполнит его.", "q": "The 100 (Continue) status code indicates that the initial part of a request has been received and has not yet been rejected by the server.", "s": "15.2.1"}, {"c": 101, "en": "Switching Protocols", "ru": "смена протокола", "m": "Сервер понял просьбу клиента сменить протокол на этом соединении (поле Upgrade) и согласен. В ответе он обязан прислать Upgrade с протоколом, который будет действовать дальше.", "q": "The 101 (Switching Protocols) status code indicates that the server understands and is willing to comply with the client's request, via the Upgrade header field (Section 7.8), for a change in the application protocol being used on this connection.", "s": "15.2.2"}, {"c": 200, "en": "OK", "ru": "всё в порядке", "m": "Запрос выполнен. Что лежит в ответе, зависит от метода запроса.", "q": "The 200 (OK) status code indicates that the request has succeeded.", "s": "15.3.1"}, {"c": 201, "en": "Created", "ru": "создано", "m": "Запрос выполнен, и в результате появился один или несколько новых ресурсов. Главный из них указан в поле Location, а если его нет, это сам целевой URI.", "q": "The 201 (Created) status code indicates that the request has been fulfilled and has resulted in one or more new resources being created.", "s": "15.3.2"}, {"c": 202, "en": "Accepted", "ru": "принято", "m": "Запрос принят в обработку, но она не закончена. Его могут так и не выполнить, а прислать код позже, по итогам асинхронной операции, HTTP не умеет.", "q": "The 202 (Accepted) status code indicates that the request has been accepted for processing, but the processing has not been completed.", "s": "15.3.3"}, {"c": 203, "en": "Non-Authoritative Information", "ru": "информация не из первоисточника", "m": "Запрос выполнен, но по дороге содержимое изменил преобразующий прокси: оно отличается от ответа 200 исходного сервера.", "q": "The 203 (Non-Authoritative Information) status code indicates that the request was successful but the enclosed content has been modified from that of the origin server's 200 (OK) response by a transforming proxy (Section 7.7).", "s": "15.3.4"}, {"c": 204, "en": "No Content", "ru": "нет содержимого", "m": "Сервер выполнил запрос, и прислать в содержимом ответа ему больше нечего.", "q": "The 204 (No Content) status code indicates that the server has successfully fulfilled the request and that there is no additional content to send in the response content.", "s": "15.3.5"}, {"c": 205, "en": "Reset Content", "ru": "сбрось содержимое", "m": "Сервер выполнил запрос и просит клиента вернуть «вид документа», из которого ушёл запрос, в исходное состояние.", "q": "The 205 (Reset Content) status code indicates that the server has fulfilled the request and desires that the user agent reset the \"document view\", which caused the request to be sent, to its original state as received from the origin server.", "s": "15.3.6"}, {"c": 206, "en": "Partial Content", "ru": "частичное содержимое", "m": "Сервер выполняет запрос диапазона: передаёт одну или несколько частей выбранного представления.", "q": "The 206 (Partial Content) status code indicates that the server is successfully fulfilling a range request for the target resource by transferring one or more parts of the selected representation.", "s": "15.3.7"}, {"c": 300, "en": "Multiple Choices", "ru": "несколько вариантов", "m": "У ресурса несколько представлений, у каждого свой адрес. Сервер даёт список, чтобы клиент выбрал нужное.", "q": "The 300 (Multiple Choices) status code indicates that the target resource has more than one representation, each with its own more specific identifier, and information about the alternatives is being provided so that the user (or user agent) can select a preferred representation by redirecting its request to one or more of those identifiers.", "s": "15.4.1"}, {"c": 301, "en": "Moved Permanently", "ru": "перемещено навсегда", "m": "Ресурсу назначен новый постоянный URI, и все будущие ссылки должны вести туда. По историческим причинам клиент может сменить POST на GET; если это нежелательно, есть 308.", "q": "The 301 (Moved Permanently) status code indicates that the target resource has been assigned a new permanent URI and any future references to this resource ought to use one of the enclosed URIs.", "s": "15.4.2"}, {"c": 302, "en": "Found", "ru": "найдено", "m": "Ресурс временно лежит по другому URI. Перенаправление может меняться, поэтому дальше клиенту стоит обращаться по прежнему адресу.", "q": "The 302 (Found) status code indicates that the target resource resides temporarily under a different URI.", "s": "15.4.3"}, {"c": 303, "en": "See Other", "ru": "смотри другое", "m": "Сервер отсылает клиента к другому ресурсу из поля Location: это косвенный ответ на исходный запрос.", "q": "The 303 (See Other) status code indicates that the server is redirecting the user agent to a different resource, as indicated by a URI in the Location header field, which is intended to provide an indirect response to the original request.", "s": "15.4.4"}, {"c": 304, "en": "Not Modified", "ru": "не изменилось", "m": "Условный GET или HEAD дал бы 200, но условие оказалось ложным. У клиента уже есть действующая копия, пусть ею и пользуется.", "q": "The 304 (Not Modified) status code indicates that a conditional GET or HEAD request has been received and would have resulted in a 200 (OK) response if it were not for the fact that the condition evaluated to false.", "s": "15.4.5"}, {"c": 305, "en": "Use Proxy", "ru": "используй прокси", "m": "Код был в прошлой версии спецификации и теперь устарел.", "q": "The 305 (Use Proxy) status code was defined in a previous version of this specification and is now deprecated (Appendix B of [RFC7231]).", "s": "15.4.6"}, {"c": 306, "en": "(Unused)", "ru": "не используется", "m": "Код был в прошлой версии спецификации, больше не применяется и зарезервирован.", "q": "The 306 status code was defined in a previous version of this specification, is no longer used, and the code is reserved.", "s": "15.4.7"}, {"c": 307, "en": "Temporary Redirect", "ru": "временное перенаправление", "m": "Ресурс временно лежит по другому URI. Переходя туда автоматически, клиент не должен менять метод запроса.", "q": "The 307 (Temporary Redirect) status code indicates that the target resource resides temporarily under a different URI and the user agent MUST NOT change the request method if it performs an automatic redirection to that URI.", "s": "15.4.8"}, {"c": 308, "en": "Permanent Redirect", "ru": "постоянное перенаправление", "m": "Ресурсу назначен новый постоянный URI, и все будущие ссылки должны вести туда. Код моложе соседей, он появился в июне 2014 года и понятен не везде.", "q": "The 308 (Permanent Redirect) status code indicates that the target resource has been assigned a new permanent URI and any future references to this resource ought to use one of the enclosed URIs.", "s": "15.4.9"}, {"c": 400, "en": "Bad Request", "ru": "неверный запрос", "m": "Сервер не может или не станет обрабатывать запрос из-за того, что считает ошибкой клиента: неверный синтаксис, сломанное кадрирование сообщения, обманная маршрутизация.", "q": "The 400 (Bad Request) status code indicates that the server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing).", "s": "15.5.1"}, {"c": 401, "en": "Unauthorized", "ru": "нет авторизации", "m": "Запрос не выполнен: у него нет действующих учётных данных для этого ресурса. Сервер обязан прислать поле WWW-Authenticate хотя бы с одним вызовом.", "q": "The 401 (Unauthorized) status code indicates that the request has not been applied because it lacks valid authentication credentials for the target resource.", "s": "15.5.2"}, {"c": 402, "en": "Payment Required", "ru": "нужна оплата", "m": "Код зарезервирован на будущее.", "q": "The 402 (Payment Required) status code is reserved for future use.", "s": "15.5.3"}, {"c": 403, "en": "Forbidden", "ru": "запрещено", "m": "Сервер понял запрос, но отказывается его выполнять. Если хочет объяснить почему, пишет причину в содержимом ответа.", "q": "The 403 (Forbidden) status code indicates that the server understood the request but refuses to fulfill it.", "s": "15.5.4"}, {"c": 404, "en": "Not Found", "ru": "не найдено", "m": "Исходный сервер не нашёл текущего представления ресурса или не хочет признавать, что оно есть. Временно это или навсегда, код не говорит.", "q": "The 404 (Not Found) status code indicates that the origin server did not find a current representation for the target resource or is not willing to disclose that one exists.", "s": "15.5.5"}, {"c": 405, "en": "Method Not Allowed", "ru": "метод не разрешён", "m": "Метод из строки запроса серверу известен, но этот ресурс его не поддерживает. Сервер обязан прислать поле Allow со списком того, что поддерживается.", "q": "The 405 (Method Not Allowed) status code indicates that the method received in the request-line is known by the origin server but not supported by the target resource.", "s": "15.5.6"}, {"c": 406, "en": "Not Acceptable", "ru": "неприемлемо", "m": "У ресурса нет представления, которое устроило бы клиента по полям проактивного согласования, а отдавать вариант по умолчанию сервер не хочет.", "q": "The 406 (Not Acceptable) status code indicates that the target resource does not have a current representation that would be acceptable to the user agent, according to the proactive negotiation header fields received in the request (Section 12.1), and the server is unwilling to supply a default representation.", "s": "15.5.7"}, {"c": 407, "en": "Proxy Authentication Required", "ru": "нужна аутентификация на прокси", "m": "Как 401, только аутентифицироваться клиенту нужно на прокси. Прокси обязан прислать поле Proxy-Authenticate.", "q": "The 407 (Proxy Authentication Required) status code is similar to 401 (Unauthorized), but it indicates that the client needs to authenticate itself in order to use a proxy for this request.", "s": "15.5.8"}, {"c": 408, "en": "Request Timeout", "ru": "время запроса вышло", "m": "Сервер не получил полного сообщения запроса за то время, которое был готов ждать.", "q": "The 408 (Request Timeout) status code indicates that the server did not receive a complete request message within the time that it was prepared to wait.", "s": "15.5.9"}, {"c": 409, "en": "Conflict", "ru": "конфликт", "m": "Запрос не выполнен из-за конфликта с текущим состоянием ресурса. Код для случаев, когда пользователь может разрешить конфликт и отправить запрос снова.", "q": "The 409 (Conflict) status code indicates that the request could not be completed due to a conflict with the current state of the target resource.", "s": "15.5.10"}, {"c": 410, "en": "Gone", "ru": "удалено", "m": "Ресурса на исходном сервере больше нет, и, скорее всего, навсегда. Если сервер не знает, навсегда ли, ему следует ответить 404.", "q": "The 410 (Gone) status code indicates that access to the target resource is no longer available at the origin server and that this condition is likely to be permanent.", "s": "15.5.11"}, {"c": 411, "en": "Length Required", "ru": "нужна длина", "m": "Сервер не примет запрос без Content-Length. Клиент может повторить его, добавив корректное поле.", "q": "The 411 (Length Required) status code indicates that the server refuses to accept the request without a defined Content-Length (Section 8.6).", "s": "15.5.12"}, {"c": 412, "en": "Precondition Failed", "ru": "предусловие не выполнено", "m": "Одно или несколько условий из полей заголовка запроса оказались на сервере ложными.", "q": "The 412 (Precondition Failed) status code indicates that one or more conditions given in the request header fields evaluated to false when tested on the server (Section 13).", "s": "15.5.13"}, {"c": 413, "en": "Content Too Large", "ru": "содержимое слишком велико", "m": "Сервер отказывается обрабатывать запрос: содержимое больше, чем он хочет или может обработать.", "q": "The 413 (Content Too Large) status code indicates that the server is refusing to process a request because the request content is larger than the server is willing or able to process.", "s": "15.5.14"}, {"c": 414, "en": "URI Too Long", "ru": "URI слишком длинный", "m": "Целевой URI длиннее, чем сервер готов разбирать. Редкий случай: например, клиент ушёл в бесконечную петлю перенаправлений.", "q": "The 414 (URI Too Long) status code indicates that the server is refusing to service the request because the target URI is longer than the server is willing to interpret.", "s": "15.5.15"}, {"c": 415, "en": "Unsupported Media Type", "ru": "неподдерживаемый тип содержимого", "m": "Содержимое запроса в формате, который этот метод на этом ресурсе не поддерживает.", "q": "The 415 (Unsupported Media Type) status code indicates that the origin server is refusing to service the request because the content is in a format not supported by this method on the target resource.", "s": "15.5.16"}, {"c": 416, "en": "Range Not Satisfiable", "ru": "диапазон недостижим", "m": "Диапазоны из поля Range отклонены: ни один не выполним, или клиент запросил слишком много мелких либо пересекающихся диапазонов.", "q": "The 416 (Range Not Satisfiable) status code indicates that the set of ranges in the request's Range header field (Section 14.2) has been rejected either because none of the requested ranges are satisfiable or because the client has requested an excessive number of small or overlapping ranges (a potential denial of service attack).", "s": "15.5.17"}, {"c": 417, "en": "Expectation Failed", "ru": "ожидание не оправдалось", "m": "Ожидание из поля Expect не смог выполнить хотя бы один из серверов по пути.", "q": "The 417 (Expectation Failed) status code indicates that the expectation given in the request's Expect header field (Section 10.1.1) could not be met by at least one of the inbound servers.", "s": "15.5.18"}, {"c": 418, "en": "(Unused)", "ru": "не используется", "m": "RFC 2324 был первоапрельским и высмеивал, как злоупотребляют HTTP. Одной из шуток был код 418, и его так часто ставили ради шутки, что ни для чего другого он теперь не годится. Поэтому 418 зарезервирован в реестре кодов IANA: другим приложениям его не отдают, но если коды 4NN когда-нибудь кончатся, его могут переназначить.", "q": "[RFC2324] was an April 1 RFC that lampooned the various ways HTTP was abused; one such abuse was the definition of an application-specific 418 status code, which has been deployed as a joke often enough for the code to be unusable for any future use. Therefore, the 418 status code is reserved in the IANA HTTP Status Code Registry. This indicates that the status code cannot be assigned to other applications currently. If future circumstances require its use (e.g., exhaustion of 4NN status codes), it can be re-assigned to another use.", "s": "15.5.19"}, {"c": 421, "en": "Misdirected Request", "ru": "запрос не по адресу", "m": "Запрос попал на сервер, который не может или не хочет дать авторитетный ответ для этого URI.", "q": "The 421 (Misdirected Request) status code indicates that the request was directed at a server that is unable or unwilling to produce an authoritative response for the target URI.", "s": "15.5.20"}, {"c": 422, "en": "Unprocessable Content", "ru": "необрабатываемое содержимое", "m": "Тип содержимого серверу понятен и синтаксис верен, но выполнить инструкции внутри он не смог.", "q": "The 422 (Unprocessable Content) status code indicates that the server understands the content type of the request content (hence a 415 (Unsupported Media Type) status code is inappropriate), and the syntax of the request content is correct, but it was unable to process the contained instructions.", "s": "15.5.21"}, {"c": 426, "en": "Upgrade Required", "ru": "нужно обновление", "m": "Сервер отказывается выполнять запрос по текущему протоколу, но может согласиться, если клиент перейдёт на другой. Он обязан прислать поле Upgrade.", "q": "The 426 (Upgrade Required) status code indicates that the server refuses to perform the request using the current protocol but might be willing to do so after the client upgrades to a different protocol.", "s": "15.5.22"}, {"c": 500, "en": "Internal Server Error", "ru": "внутренняя ошибка сервера", "m": "Сервер столкнулся с непредвиденным условием и не смог выполнить запрос.", "q": "The 500 (Internal Server Error) status code indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.", "s": "15.6.1"}, {"c": 501, "en": "Not Implemented", "ru": "не реализовано", "m": "Сервер не поддерживает функцию, нужную для запроса. Это правильный ответ, когда сервер не знает метод запроса.", "q": "The 501 (Not Implemented) status code indicates that the server does not support the functionality required to fulfill the request.", "s": "15.6.2"}, {"c": 502, "en": "Bad Gateway", "ru": "плохой шлюз", "m": "Сервер, работая шлюзом или прокси, получил недопустимый ответ от сервера, к которому обращался.", "q": "The 502 (Bad Gateway) status code indicates that the server, while acting as a gateway or proxy, received an invalid response from an inbound server it accessed while attempting to fulfill the request.", "s": "15.6.3"}, {"c": 503, "en": "Service Unavailable", "ru": "сервис недоступен", "m": "Сервер сейчас не может обработать запрос: временная перегрузка или плановое обслуживание. Обычно это проходит, и сервер может прислать Retry-After.", "q": "The 503 (Service Unavailable) status code indicates that the server is currently unable to handle the request due to a temporary overload or scheduled maintenance, which will likely be alleviated after some delay.", "s": "15.6.4"}, {"c": 504, "en": "Gateway Timeout", "ru": "шлюз не дождался", "m": "Сервер, работая шлюзом или прокси, не дождался вовремя ответа от вышестоящего сервера.", "q": "The 504 (Gateway Timeout) status code indicates that the server, while acting as a gateway or proxy, did not receive a timely response from an upstream server it needed to access in order to complete the request.", "s": "15.6.5"}, {"c": 505, "en": "HTTP Version Not Supported", "ru": "версия HTTP не поддерживается", "m": "Сервер не поддерживает или отказывается поддерживать мажорную версию HTTP из запроса.", "q": "The 505 (HTTP Version Not Supported) status code indicates that the server does not support, or refuses to support, the major version of HTTP that was used in the request message.", "s": "15.6.6"}];
+  const CLS = {"1": ["информационный", "Запрос получен, обработка продолжается."], "2": ["успешный", "Запрос получен, понят и принят."], "3": ["перенаправление", "Чтобы выполнить запрос, нужен ещё один шаг."], "4": ["ошибка клиента", "В запросе ошибка, или его нельзя выполнить."], "5": ["ошибка сервера", "Сервер не выполнил запрос, который выглядит правильным."]};
+  const FIG418 = "<figure class=\"teapot\"><img src=\"img/revere-teapot-1782.jpg\" alt=\"Серебряный чайник-цилиндр с прямым носиком и чёрной ручкой\" width=\"1000\" height=\"806\" loading=\"lazy\"><figcaption>Пол Ревир-младший. Чайник, около 1782. Серебро. Метрополитен-музей. В RFC 2324 код звучал «418 I’m a teapot»: так чайник отвечает на попытку сварить в нём кофе. Тело ответа «МОЖЕТ быть низеньким и пузатым».</figcaption></figure>";
+  const DEFAULT = 404;
+  // RFC 9110, 15.1: heuristically cacheable codes
+  const CACHE = new Set([200, 203, 204, 206, 300, 301, 308, 404, 405, 410, 414, 501]);
+  const by = new Map(DATA.map(d => [d.c, d]));
+  const $ = id => document.getElementById(id);
+  const ins = $('ins'), input = $('anyc'), sides = $('sides');
+  const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+  const two = n => String(n % 100).padStart(2, '0');
+  const three = n => String(n).padStart(3, '0');
+  const narrow = () => window.matchMedia('(max-width: 980px)').matches;
+  const rfc = (s, text) => `<a href="https://www.rfc-editor.org/rfc/rfc9110#section-${s}" target="_blank" rel="noopener">${text}</a>`;
+
+  function known(d) {
+    const side = Math.floor(d.c / 100), k = CLS[side];
+    return `<p class="where">Сторона ${side} · трек ${two(d.c)}</p>
+<p class="code">${d.c}</p>
+<h2 class="phrase">${esc(d.en)}<span class="ru">${esc(d.ru)}</span></h2>
+<p class="cls">${side}xx · ${k[0]}. ${k[1]}</p>
+<p class="mean">${esc(d.m)}</p>
+<blockquote class="orig" lang="en">${esc(d.q)}</blockquote>
+<p class="meta">${rfc(d.s, 'RFC 9110, § ' + d.s)} · ${CACHE.has(d.c) ? 'кэшируется эвристически' : 'эвристически не кэшируется'}</p>` + (d.c === 418 ? '\n' + FIG418 : '');
+  }
+
+  // RFC 9110, section 15: unknown codes are read by their class; values outside 100..599 are invalid.
+  function unknown(c) {
+    if (c >= 100 && c <= 599) {
+      const side = Math.floor(c / 100), k = CLS[side], base = by.get(side * 100);
+      return `<p class="where">Сторона ${side} · трека ${two(c)} нет</p>
+<p class="code">${c}</p>
+<h2 class="phrase">Нет в RFC 9110<span class="ru">неизвестный код</span></h2>
+<p class="cls">${side}xx · ${k[0]}. ${k[1]}</p>
+<p class="mean">Знать все коды клиент не обязан, а понимать класс обязан. Неизвестный ${c} он должен прочитать как ${side}00 ${esc(base.en)}.</p>
+<blockquote class="orig" lang="en">…a client MUST understand the class of any status code, as indicated by the first digit, and treat an unrecognized status code as being equivalent to the x00 status code of that class.</blockquote>
+<p class="meta">${rfc('15', 'RFC 9110, § 15')}</p>`;
+    }
+    return `<p class="where">Вне пластинки</p>
+<p class="code">${three(c)}</p>
+<h2 class="phrase">Недействительный код<span class="ru">вне диапазона 100–599</span></h2>
+<p class="mean">Коды ответа живут от 100 до 599. Получив любой другой, клиенту следует считать ответ ошибкой сервера, 5xx.</p>
+<blockquote class="orig" lang="en">Values outside the range 100..599 are invalid. … A client that receives a response with an invalid status code SHOULD process the response as if it had a 5xx (Server Error) status code.</blockquote>
+<p class="meta">${rfc('15', 'RFC 9110, § 15')}</p>`;
+  }
+
+  function show(c, how) {
+    const d = by.get(c);
+    ins.innerHTML = d ? known(d) : unknown(c);
+    sides.querySelectorAll('button[data-c]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.c === c)));
+    if (how !== 'input') input.value = three(c);
+    if (how !== 'load') { try { history.replaceState(null, '', '#' + three(c)); } catch (e) { /* sandboxed frame */ } }
+    if (how === 'track' && narrow()) $('vkladysh').scrollIntoView({ block: 'start' });
+  }
+
+  sides.addEventListener('click', ev => {
+    const b = ev.target.closest('button[data-c]');
+    if (b) show(+b.dataset.c, 'track');
+  });
+  input.addEventListener('input', () => {
+    const v = input.value.replace(/\D/g, '').slice(0, 3);
+    if (v !== input.value) input.value = v;
+    if (v.length === 3) show(+v, 'input');
+  });
+  $('any').addEventListener('submit', ev => ev.preventDefault());
+  const fromHash = () => { const m = /^#(\d{3})$/.exec(location.hash); return m ? +m[1] : null; };
+  window.addEventListener('hashchange', () => { const c = fromHash(); if (c !== null) show(c, 'load'); });
+  const c0 = fromHash();
+  if (c0 !== null && c0 !== DEFAULT) show(c0, 'load');
+})();
+</script>
+</body>
+</html>
